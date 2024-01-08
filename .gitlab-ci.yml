@@ -21,7 +21,31 @@ variables:
         - ${DOCKERFILE_DIR}/*
         - .gitlab-ci.yml
 
+.build:
+  image: docker:20.10
+  stage: build
+  variables:
+    CR_NAME: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}:latest
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build --pull --rm=true -t ${CR_NAME} ${DOCKERFILE_DIR}
+    - docker push ${CR_NAME}
+  after_script:
+    - docker logout ${CI_REGISTRY}
+  only:
+    changes:
+      - ${DOCKERFILE_DIR}/*
+      - .gitlab-ci.yml
+
 test-fastp:
   extends: .test
   variables:
     DOCKERFILE_DIR: ./dockerfiles/fastp
+
+
+build-fastp:
+  extends: .build
+  variables:
+    DOCKERFILE_DIR: ./dockerfiles/fastp
+    CONTAINER_IMAGE_NAME: fastp
+  needs: [ "test-fastp" ]
