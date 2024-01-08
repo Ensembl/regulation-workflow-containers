@@ -1,0 +1,27 @@
+services:
+  - docker:20-dind
+
+stages:
+  - test
+  - build
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  RDR_DOCKER_CONFIG_DIR: .
+
+.test:
+  image: docker:20.10
+  stage: test
+  script:
+    - docker --version
+    - docker compose --file ${DOCKERFILE_DIR}/docker-compose.test.yml up --build --exit-code-from sut
+
+test-fastp:
+  extends: .test
+  variables:
+    DOCKERFILE_DIR: ./dockerfiles/fastp
+  rules:
+    - changes:
+        - ${DOCKERFILE_DIR}/*
+        - .gitlab-ci.yml
