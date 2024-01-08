@@ -16,12 +16,12 @@ variables:
   script:
     - docker --version
     - docker compose --file ${DOCKERFILE_DIR}/docker-compose.test.yml up --build --exit-code-from sut
+  rules:
+    - changes:
+        - ${DOCKERFILE_DIR}/*
+        - .gitlab-ci.yml
 
 test-fastp:
   extends: .test
   variables:
     DOCKERFILE_DIR: ./dockerfiles/fastp
-  rules:
-    - changes:
-        - ${DOCKERFILE_DIR}/*
-        - .gitlab-ci.yml
