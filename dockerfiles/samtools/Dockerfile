@@ -24,7 +24,8 @@ RUN apk add --no-cache \
     xz-dev \
     curl-dev \
     libressl-dev \
-    ncurses-dev
+    ncurses-dev \
+    jq
 
 ENV SAMTOOLS_VERSION="1.15.1"
 ENV SAMTOOLS_DOWNLOAD_URL="https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2"

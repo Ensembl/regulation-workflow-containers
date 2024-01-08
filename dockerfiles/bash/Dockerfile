@@ -1,6 +1,6 @@
 FROM bash:latest
 
-RUN apk add --no-cache tar
+RUN apk add --no-cache tar pigz
 
 RUN  mkdir /results
 
