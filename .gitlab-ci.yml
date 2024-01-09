@@ -26,16 +26,20 @@ variables:
   stage: build
   variables:
     CR_NAME: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}:latest
+    DOCKERHUB_NAME: ensemblorg/${CONTAINER_IMAGE_NAME}:latest
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker build --pull --rm=true -t ${CR_NAME} ${DOCKERFILE_DIR}
     - docker push ${CR_NAME}
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+    - docker tag ${CR_NAME} ${DOCKERHUB_NAME}
+    - docker push ${DOCKERHUB_NAME}
   after_script:
     - docker logout ${CI_REGISTRY}
-  only:
-    changes:
-      - ${DOCKERFILE_DIR}/*
-      - .gitlab-ci.yml
+  rules:
+    - changes:
+        - ${DOCKERFILE_DIR}/*
+        - .gitlab-ci.yml
 
 test-fastp:
   extends: .test
