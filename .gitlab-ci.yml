@@ -13,9 +13,21 @@ variables:
 .test:
   image: docker:20.10
   stage: test
-  script:
+  before_script:
     - docker --version
-    - docker compose --file ${DOCKERFILE_DIR}/docker-compose.test.yml up --build --exit-code-from sut
+    - docker-compose --version
+  script:
+    - |
+      if [ -f ${DOCKERFILE_DIR}/docker-compose.test.yml ]; then
+          docker compose \
+          --file ${DOCKERFILE_DIR}/docker-compose.test.yml up \
+          --build \
+          --exit-code-from sut
+      else
+          docker build \
+          ${DOCKERFILE_DIR} \
+          --file ${DOCKERFILE_DIR}/Dockerfile
+      fi
   rules:
     - changes:
         - ${DOCKERFILE_DIR}/*
