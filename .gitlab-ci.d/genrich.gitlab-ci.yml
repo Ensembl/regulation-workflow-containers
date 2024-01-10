@@ -1,0 +1,19 @@
+.genrich:
+  variables:
+    DOCKERFILE_DIR: ./dockerfiles/genrich
+  rules:
+    - changes:
+        - .gitlab-ci.d/genrich.gitlab-ci.yml
+
+test-genrich:
+  extends:
+    - .test
+    - .genrich
+
+build-genrich:
+  extends:
+    - .build
+    - .genrich
+  variables:
+    CONTAINER_IMAGE_NAME: genrich
+  needs: [ "test-genrich" ]
