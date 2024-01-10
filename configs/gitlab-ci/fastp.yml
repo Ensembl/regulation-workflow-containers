@@ -1,9 +1,9 @@
 .fastp:
   variables:
-    DOCKERFILE_DIR: ./dockerfiles/fastp
+    DOCKERFILE_DIR: dockerfiles/fastp
   rules:
     - changes:
-        - .gitlab-ci.d/fastp.gitlab-ci.yml
+        - configs/gitlab-ci/fastp.yml
 
 test-fastp:
   extends:
