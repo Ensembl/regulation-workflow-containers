@@ -1,4 +1,4 @@
-FROM bitnami/minideb:stretch as builder
+FROM bitnami/minideb:bullseye as builder
 
 RUN install_packages  \
     gcc \
@@ -11,7 +11,7 @@ RUN git clone --depth 1 --branch v0.6.1 https://github.com/jsh58/Genrich.git
 WORKDIR Genrich
 RUN make
 
-FROM bitnami/minideb:stretch
+FROM bitnami/minideb:bullseye
 
 COPY --from=builder /Genrich/Genrich /usr/local/bin/
 WORKDIR /mnt
