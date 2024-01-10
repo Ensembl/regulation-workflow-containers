@@ -1,0 +1,12 @@
+test-fastp:
+  extends: .test
+  variables:
+    DOCKERFILE_DIR: ./dockerfiles/fastp
+
+
+build-fastp:
+  extends: .build
+  variables:
+    DOCKERFILE_DIR: ./dockerfiles/fastp
+    CONTAINER_IMAGE_NAME: fastp
+  needs: [ "test-fastp" ]

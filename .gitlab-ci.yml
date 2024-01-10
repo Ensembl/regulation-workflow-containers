@@ -1,6 +1,9 @@
 services:
   - docker:20-dind
 
+include:
+  - local: .gitlab-ci.d/*.yml
+
 stages:
   - test
   - build
@@ -53,15 +56,3 @@ variables:
         - ${DOCKERFILE_DIR}/*
         - .gitlab-ci.yml
 
-test-fastp:
-  extends: .test
-  variables:
-    DOCKERFILE_DIR: ./dockerfiles/fastp
-
-
-build-fastp:
-  extends: .build
-  variables:
-    DOCKERFILE_DIR: ./dockerfiles/fastp
-    CONTAINER_IMAGE_NAME: fastp
-  needs: [ "test-fastp" ]
