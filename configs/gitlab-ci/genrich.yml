@@ -9,6 +9,10 @@ test-genrich:
   extends:
     - .test
     - .genrich
+  rules:
+    - changes:
+        - !reference [ .test, rules, changes ]
+        - !reference [ .genrich, rules, changes ]
 
 build-genrich:
   extends:
@@ -17,3 +21,7 @@ build-genrich:
   variables:
     CONTAINER_IMAGE_NAME: genrich
   needs: [ "test-genrich" ]
+  rules:
+    - changes:
+        - !reference [ .build, rules, changes ]
+        - !reference [ .genrich, rules, changes ]
