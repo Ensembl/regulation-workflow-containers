@@ -31,10 +31,6 @@ variables:
           ${DOCKERFILE_DIR} \
           --file ${DOCKERFILE_DIR}/Dockerfile
       fi
-  rules:
-    - changes:
-        - ${DOCKERFILE_DIR}/*
-        - .gitlab-ci.yml
 
 .build:
   image: docker:20.10
@@ -51,8 +47,5 @@ variables:
     - docker push ${DOCKERHUB_NAME}
   after_script:
     - docker logout ${CI_REGISTRY}
-  rules:
-    - changes:
-        - ${DOCKERFILE_DIR}/*
-        - .gitlab-ci.yml
+
 

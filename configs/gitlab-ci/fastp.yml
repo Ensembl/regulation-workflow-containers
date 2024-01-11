@@ -4,15 +4,13 @@
   rules:
     - changes:
         - configs/gitlab-ci/fastp.yml
+        - ${DOCKERFILE_DIR}/*
+        - .gitlab-ci.yml
 
 test-fastp:
   extends:
     - .test
     - .fastp
-  rules:
-    - changes:
-        - !reference [ .test, rules, changes ]
-        - !reference [ .fastp, rules, changes ]
 
 build-fastp:
   extends:
@@ -21,7 +19,3 @@ build-fastp:
   variables:
     CONTAINER_IMAGE_NAME: fastp
   needs: [ "test-fastp" ]
-  rules:
-    - changes:
-        - !reference [ .build, rules, changes ]
-        - !reference [ .fastp, rules, changes ]

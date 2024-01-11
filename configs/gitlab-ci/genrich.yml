@@ -4,15 +4,13 @@
   rules:
     - changes:
         - configs/gitlab-ci/genrich.yml
+        - ${DOCKERFILE_DIR}/*
+        - .gitlab-ci.yml
 
 test-genrich:
   extends:
     - .test
     - .genrich
-  rules:
-    - changes:
-        - !reference [ .test, rules, changes ]
-        - !reference [ .genrich, rules, changes ]
 
 build-genrich:
   extends:
@@ -21,7 +19,3 @@ build-genrich:
   variables:
     CONTAINER_IMAGE_NAME: genrich
   needs: [ "test-genrich" ]
-  rules:
-    - changes:
-        - !reference [ .build, rules, changes ]
-        - !reference [ .genrich, rules, changes ]
