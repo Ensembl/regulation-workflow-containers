@@ -1,10 +1,11 @@
 .fastp:
   variables:
     DOCKERFILE_DIR: dockerfiles/fastp
+  # TODO: It would be nice to use DOCKERFILE_DIR in rules:changes. It doesn't work when tested for in 15.11.6-ee
   rules:
     - changes:
         - configs/gitlab-ci/fastp.yml
-        - ${DOCKERFILE_DIR}/*
+        - dockerfiles/fastp/*
         - .gitlab-ci.yml
 
 test-fastp:

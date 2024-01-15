@@ -1,6 +1,7 @@
 .genrich:
   variables:
     DOCKERFILE_DIR: dockerfiles/genrich
+  # TODO: It would be nice to use DOCKERFILE_DIR in rules:changes. It doesn't work when tested for in 15.11.6-ee
   rules:
     - changes:
         - configs/gitlab-ci/genrich.yml
