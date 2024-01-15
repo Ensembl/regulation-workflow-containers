@@ -1,5 +1,13 @@
 FROM ubuntu:20.04
 
+LABEL software="fastp"
+LABEL software.version="0.23.2"
+LABEL about.summary="An ultra-fast all-in-one FASTQ preprocessor (QC/adapters/trimming/filtering/splitting/merging...)"
+LABEL about.home="https://github.com/OpenGene/fastp"
+LABEL about.documentation="https://github.com/OpenGene/fastp/blob/master/README.md"
+LABEL about.license="https://github.com/OpenGene/fastp?tab=MIT-1-ov-file"
+
+
 USER root
 # TODO: specify USER different that root
 
