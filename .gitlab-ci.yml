@@ -36,14 +36,15 @@ variables:
   image: docker:20.10
   stage: build
   variables:
-    CR_NAME: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}:latest
-    DOCKERHUB_NAME: ensemblorg/${CONTAINER_IMAGE_NAME}:latest
+    CR_NAME: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}
+    DOCKERHUB_NAME: ensemblorg/${CONTAINER_IMAGE_NAME}
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker build --pull --rm=true -t ${CR_NAME} ${DOCKERFILE_DIR}
+    - docker build --pull --rm=true -t ${CR_NAME}:latest ${DOCKERFILE_DIR}
+    - docker inspect --format '{{ index .Config.Labels "software.version"}}' ${CR_NAME}
     - docker push ${CR_NAME}
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-    - docker tag ${CR_NAME} ${DOCKERHUB_NAME}
+    - docker tag ${CR_NAME} ${DOCKERHUB_NAME}:latest
     - docker push ${DOCKERHUB_NAME}
   after_script:
     - docker logout ${CI_REGISTRY}
