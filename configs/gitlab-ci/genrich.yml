@@ -4,7 +4,7 @@
   rules:
     - changes:
         - configs/gitlab-ci/genrich.yml
-        - ${DOCKERFILE_DIR}/*
+        - dockerfiles/genrich/*
         - .gitlab-ci.yml
 
 test-genrich:
