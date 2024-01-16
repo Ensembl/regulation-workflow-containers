@@ -17,14 +17,13 @@ RUN wget ${FASTQC_URL}/${ZIP_FILE} -O /${ZIP_FILE} \
 
 FROM alpine:3.12
 
-LABEL base.image="ensembl-fastqc:latest"
-LABEL version="0.1"
 LABEL software="FastQC"
 LABEL software.version="0.11.9"
 LABEL about.summary="A quality control tool for high throughput sequence data."
 LABEL about.home="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/"
 LABEL about.documentation="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/"
 LABEL license="https://www.gnu.org/licenses/gpl-3.0.html"
+
 LABEL mantainer="David Urbina-Gómez"
 LABEL mantainer.email="durbina@ebi.ac.uk"
 
