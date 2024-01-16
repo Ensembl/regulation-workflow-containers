@@ -1,13 +1,13 @@
 FROM alpine:3.12
 
-LABEL base.image="ensembl-samtools:latest"
-LABEL version="0.2"
+
 LABEL software="Samtools"
 LABEL software.version="1.15"
-LABEL about.summary="Samtools is a suite of programs for interacting with high-throughput sequencing data."
+LABEL about.summary="Suite of programs for interacting with high-throughput sequencing data."
 LABEL about.home="https://github.com/samtools/samtools"
 LABEL about.documentation="http://www.htslib.org/doc/samtools.html"
-LABEL license="https://github.com/samtools/samtools/blob/develop/LICENSE"
+LABEL about.license="https://github.com/samtools/samtools/blob/develop/LICENSE"
+
 LABEL mantainer="David Urbina-Gómez"
 LABEL mantainer.email="durbina@ebi.ac.uk"
 
