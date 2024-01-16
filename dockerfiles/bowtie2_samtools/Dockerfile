@@ -1,4 +1,4 @@
-FROM bitnami/minideb:stretch as builder
+FROM bitnami/minideb:bullseye as builder
 
 
 RUN install_packages  \
@@ -19,7 +19,7 @@ RUN wget https://github.com/BenLangmead/bowtie2/releases/download/v${VERSION}/${
 
 WORKDIR bowtie2
 
-FROM bitnami/minideb:stretch
+FROM bitnami/minideb:bullseye
 
 LABEL software="Bowtie2"
 LABEL software.version="2.4.5"
