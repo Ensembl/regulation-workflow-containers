@@ -1,4 +1,4 @@
-FROM bitnami/minideb:stretch as builder
+FROM bitnami/minideb:bullseye as builder
 
 RUN install_packages  \
     gcc \
@@ -11,7 +11,7 @@ RUN git clone --depth 1 --branch v0.3 https://github.com/jsh58/NGmerge.git
 WORKDIR NGmerge
 RUN make
 
-FROM bitnami/minideb:stretch
+FROM bitnami/minideb:bullseye
 
 LABEL software="NGmerge"
 LABEL software.version="0.3.0"
