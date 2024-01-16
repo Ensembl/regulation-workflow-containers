@@ -1,0 +1,22 @@
+.ngmerge:
+  variables:
+    DOCKERFILE_DIR: dockerfiles/ngmerge
+  # TODO: It would be nice to use DOCKERFILE_DIR in rules:changes. It doesn't work when tested for in 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/ngmerge.yml
+        - dockerfiles/ngmerge/*
+        - .gitlab-ci.yml
+
+test-ngmerge:
+  extends:
+    - .test
+    - .ngmerge
+
+build-ngmerge:
+  extends:
+    - .build
+    - .ngmerge
+  variables:
+    CONTAINER_IMAGE_NAME: ngmerge
+  needs: [ "test-ngmerge" ]
