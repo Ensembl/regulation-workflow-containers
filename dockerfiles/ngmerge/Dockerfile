@@ -13,6 +13,16 @@ RUN make
 
 FROM bitnami/minideb:stretch
 
+LABEL software="NGmerge"
+LABEL software.version="0.3.0"
+LABEL about.summary="Merging paired-end reads and removing adapters"
+LABEL about.home="https://github.com/jsh58/NGmerge"
+LABEL about.documentation="https://github.com/jsh58/NGmerge/blob/master/README.md"
+LABEL about.license="https://github.com/jsh58/NGmerge/tree/master?tab=MIT-1-ov-file"
+
+LABEL mantainer="David Urbina-Gómez"
+LABEL mantainer.email="durbina@ebi.ac.uk"
+
 RUN install_packages  \
     libgomp1
 
@@ -23,7 +33,5 @@ WORKDIR /mnt
 COPY run_tests.sh /usr/local/bin/
 RUN  chmod 755 /usr/local/bin/run_tests.sh \
      && mkdir /results
-
-#COPY mt.queryname_sorted.bam /mnt/
 
 CMD ["NGmerge"]
