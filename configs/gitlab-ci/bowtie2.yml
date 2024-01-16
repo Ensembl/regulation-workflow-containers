@@ -1,0 +1,22 @@
+.bowtie2:
+  variables:
+    DOCKERFILE_DIR: dockerfiles/bowtie2_samtools
+  # TODO: It would be nice to use DOCKERFILE_DIR in rules:changes. It doesn't work when tested for in 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/bowtie2.yml
+        - dockerfiles/bowtie2_samtools/*
+        - .gitlab-ci.yml
+
+test-bowtie2:
+  extends:
+    - .test
+    - .bowtie2
+
+build-bowtie2:
+  extends:
+    - .build
+    - .bowtie2
+  variables:
+    CONTAINER_IMAGE_NAME: bowtie2
+  needs: [ "test-bowtie2" ]
