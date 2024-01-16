@@ -1,0 +1,22 @@
+.fastqc:
+  variables:
+    DOCKERFILE_DIR: dockerfiles/fastqc
+  # TODO: It would be nice to use DOCKERFILE_DIR in rules:changes. It doesn't work when tested for in 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/fastqc.yml
+        - dockerfiles/fastqc/*
+        - .gitlab-ci.yml
+
+test-fastqc:
+  extends:
+    - .test
+    - .fastqc
+
+build-fastqc:
+  extends:
+    - .build
+    - .fastqc
+  variables:
+    CONTAINER_IMAGE_NAME: fastqc
+  needs: [ "test-fastqc" ]
