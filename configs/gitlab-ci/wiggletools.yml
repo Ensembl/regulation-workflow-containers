@@ -18,5 +18,5 @@ build-wiggletools:
     - .build
     - .wiggletools
   variables:
-    CONTAINER_IMAGE_NAME: wiggletools
+    CONTAINER_IMAGE_NAME: regulation-wf-wiggletools
   needs: [ "test-wiggletools" ]
