@@ -1,0 +1,22 @@
+.bedtools:
+  variables:
+    DOCKERFILE_DIR: dockerfiles/bedtools
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/bedtools.yml
+        - dockerfiles/bedtools/*
+        - .gitlab-ci.yml
+
+test-bedtools:
+  extends:
+    - .test
+    - .bedtools
+
+build-bedtools:
+  extends:
+    - .build
+    - .bedtools
+  variables:
+    CONTAINER_IMAGE_NAME: bedtools
+  needs: [ "test-bedtools" ]
