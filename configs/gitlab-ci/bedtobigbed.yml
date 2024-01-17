@@ -1,7 +1,7 @@
 .bedtobigbed:
   variables:
     DOCKERFILE_DIR: dockerfiles/bedtobigbed
-  # TODO: It would be nice to use DOCKERFILE_DIR in rules:changes. It doesn't work when tested for in 15.11.6-ee
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
   rules:
     - changes:
         - configs/gitlab-ci/bedtobigbed.yml
