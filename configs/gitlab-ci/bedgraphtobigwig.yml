@@ -1,0 +1,22 @@
+.bedgraphtobigwig:
+  variables:
+    DOCKERFILE_DIR: dockerfiles/bedgraphtobigwig
+  # TODO: It would be nice to use DOCKERFILE_DIR in rules:changes. It doesn't work when tested for in 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/bedgraphtobigwig.yml
+        - dockerfiles/bedgraphtobigwig/*
+        - .gitlab-ci.yml
+
+test-bedgraphtobigwig:
+  extends:
+    - .test
+    - .bedgraphtobigwig
+
+build-bedgraphtobigwig:
+  extends:
+    - .build
+    - .bedgraphtobigwig
+  variables:
+    CONTAINER_IMAGE_NAME: bedgraphtobigwig
+  needs: [ "test-bedgraphtobigwig" ]
