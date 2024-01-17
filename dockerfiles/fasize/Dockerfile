@@ -1,5 +1,16 @@
 FROM ubuntu:20.04
 
+LABEL software="faSize"
+LABEL software.version="v459"
+LABEL about.summary="Print total base count in fa files."
+LABEL about.home="http://hgdownload.cse.ucsc.edu/admin/exe/"
+LABEL about.documentation="https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/"
+LABEL about.license="https://github.com/ucscGenomeBrowser/kent/blob/master/LICENSE"
+
+LABEL mantainer="David Urbina-Gómez"
+LABEL mantainer.email="durbina@ebi.ac.uk"
+
+
 RUN apt-get update  \
     && apt-get install -y --no-install-recommends  \
     wget  \
