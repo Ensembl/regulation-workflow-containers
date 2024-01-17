@@ -1,8 +1,8 @@
 FROM ubuntu:20.04
 
 LABEL software="bedToBigBed"
-LABEL software.version="v369"
-LABEL about.summary="Takes a standard bed file or a non-standard bed file with associated .as file to create a compressed bigBed version."
+LABEL software.version="2.10.0"
+LABEL about.summary="Convert bed file to bigBed."
 LABEL about.home="http://hgdownload.cse.ucsc.edu/admin/exe/"
 LABEL about.documentation="https://genome.ucsc.edu/goldenPath/help/bigBed.html"
 LABEL about.license="https://github.com/ucscGenomeBrowser/kent/blob/master/LICENSE"
@@ -19,7 +19,7 @@ RUN apt-get update  \
     parallel
 
 
-RUN wget --no-check-certificate https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64.v369/bedToBigBed \
+RUN wget --no-check-certificate https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedToBigBed \
     && chmod +x bedToBigBed \
     && mv bedToBigBed /usr/local/bin/
 
