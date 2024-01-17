@@ -38,13 +38,17 @@ variables:
   variables:
     CR_NAME: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}
     DOCKERHUB_NAME: ensemblorg/${CONTAINER_IMAGE_NAME}
+    # TODO: Consider splitting this into two jobs, one for building and one for pushing
+    # TODO: Consider splitting in different jobs pushing to GitLab Container Registry and Docker Hub
   script:
+    # TODO More secure way to authenticate to GitLab Container Registry
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker build --pull --rm=true -t ${CR_NAME}:latest ${DOCKERFILE_DIR}
     - SOFTWARE_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.version"}}' ${CR_NAME})
     - docker tag ${CR_NAME}:latest ${CR_NAME}:${SOFTWARE_VERSION}
     - docker push ${CR_NAME}:latest
     - docker push ${CR_NAME}:${SOFTWARE_VERSION}
+    # TODO: More secure way to authenticate to Docker Hub
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
     - docker tag ${CR_NAME}:latest ${DOCKERHUB_NAME}:latest
     - docker tag ${CR_NAME}:latest ${DOCKERHUB_NAME}:${SOFTWARE_VERSION}
