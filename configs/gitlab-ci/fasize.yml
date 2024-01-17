@@ -1,0 +1,22 @@
+.fasize:
+  variables:
+    DOCKERFILE_DIR: dockerfiles/fasize
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/fasize.yml
+        - dockerfiles/fasize/*
+        - .gitlab-ci.yml
+
+test-fasize:
+  extends:
+    - .test
+    - .fasize
+
+build-fasize:
+  extends:
+    - .build
+    - .fasize
+  variables:
+    CONTAINER_IMAGE_NAME: fasize
+  needs: [ "test-fasize" ]
