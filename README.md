@@ -19,3 +19,8 @@
 | [moods](./dockerfiles/moods/Dockerfile)                       | 1.9.4.1 | [moods:1.9.4.1](dockerhub.ebi.ac.uk/ensreg/workflows/container-images/moods:1.9.4.1) <br/> [moods:latest](dockerhub.ebi.ac.uk/ensreg/workflows/container-images/moods:latest) <br/>                                                   | ensemblorg/moods:1.9.4.1 <br/> ensemblorg/moods:latest                                        | [moods.yml](./configs/gitlab-ci/moods.yml)                       |
 | [bash](./dockerfiles/bash/Dockerfile)                         | 5.2.21  | [bash:5.2.21](dockerhub.ebi.ac.uk/ensreg/workflows/container-images/bash:5.2.21) <br/> [bash:latest](dockerhub.ebi.ac.uk/ensreg/workflows/container-images/bash:latest) <br/>                                                         | ensemblorg/bash:5.2.21 <br/> ensemblorg/bash:latest                                           | [bash.yml](./configs/gitlab-ci/bash.yml)                         |
 
+## Work in progress
+
+* Add security scanning as part of CI jobs
+* Update images to prevent privilege scalation issues
+* Update keys used for image labels. Add a way to check a minimum set is specified in an image before publishing
