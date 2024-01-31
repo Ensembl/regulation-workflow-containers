@@ -49,11 +49,11 @@ variables:
     - docker push ${CR_NAME}:latest
     - docker push ${CR_NAME}:${SOFTWARE_VERSION}
     # TODO: More secure way to authenticate to Docker Hub
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-    - docker tag ${CR_NAME}:latest ${DOCKERHUB_NAME}:latest
-    - docker tag ${CR_NAME}:latest ${DOCKERHUB_NAME}:${SOFTWARE_VERSION}
-    - docker push ${DOCKERHUB_NAME}:latest
-    - docker push ${DOCKERHUB_NAME}:${SOFTWARE_VERSION}
+    # - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+    # - docker tag ${CR_NAME}:latest ${DOCKERHUB_NAME}:latest
+    # - docker tag ${CR_NAME}:latest ${DOCKERHUB_NAME}:${SOFTWARE_VERSION}
+    # - docker push ${DOCKERHUB_NAME}:latest
+    # - docker push ${DOCKERHUB_NAME}:${SOFTWARE_VERSION}
   after_script:
     - docker logout ${CI_REGISTRY}
 
