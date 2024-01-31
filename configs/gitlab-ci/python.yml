@@ -1,0 +1,22 @@
+.python:
+  variables:
+    DOCKERFILE_DIR: dockerfiles/python
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/python.yml
+        - dockerfiles/python/*
+        - .gitlab-ci.yml
+
+test-python:
+  extends:
+    - .test
+    - .python
+
+build-python:
+  extends:
+    - .build
+    - .python
+  variables:
+    CONTAINER_IMAGE_NAME: regulation-wf-python
+  needs: [ "test-python" ]
