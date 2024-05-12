@@ -2,7 +2,7 @@ services:
   - docker:20-dind
 
 include:
-  - local: configs/gitlab-ci/*.yml
+  - local: 'configs/gitlab-ci/**.yml'
 
 stages:
   - test

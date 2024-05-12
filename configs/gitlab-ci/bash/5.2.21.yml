@@ -1,11 +1,11 @@
 .bash:
   variables:
-    DOCKERFILE_DIR: dockerfiles/bash
+    DOCKERFILE_DIR: dockerfiles/bash/5.1.21/*
   # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
   rules:
     - changes:
-        - configs/gitlab-ci/bash.yml
-        - dockerfiles/bash/*
+        - configs/gitlab-ci/bash/5.1.21.yml
+        - dockerfiles/bash/5.1.21/*
         - .gitlab-ci.yml
 
 test-bash:
