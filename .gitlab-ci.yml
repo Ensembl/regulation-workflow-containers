@@ -45,9 +45,15 @@ variables:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker build --pull --rm=true -t ${CR_NAME}:latest ${DOCKERFILE_DIR}
     - SOFTWARE_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.version"}}' ${CR_NAME})
-    - docker tag ${CR_NAME}:latest ${CR_NAME}:${SOFTWARE_VERSION}
-    - docker push ${CR_NAME}:latest
+    - docker tag ${CR_NAME} ${CR_NAME}:${SOFTWARE_VERSION}
     - docker push ${CR_NAME}:${SOFTWARE_VERSION}
+    - LATEST_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.latest_version"}}' ${CR_NAME})
+    - |
+      if [ "${LATEST_VERSION}" == "true" ]; then
+          echo "The software version ${SOFTWARE_VERSION} associated with latest version ${LATEST_VERSION}"
+          docker tag ${CR_NAME}:${SOFTWARE_VERSION} ${CR_NAME}:latest
+          docker push ${CR_NAME}:latest
+      fi
     # TODO: More secure way to authenticate to Docker Hub
     # - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
     # - docker tag ${CR_NAME}:latest ${DOCKERHUB_NAME}:latest
