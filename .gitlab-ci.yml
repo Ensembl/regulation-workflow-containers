@@ -30,6 +30,11 @@ variables:
           ${DOCKERFILE_DIR} \
           --file ${DOCKERFILE_DIR}/Dockerfile
       fi
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
 
 .build:
   image: docker:20.10
@@ -61,5 +66,10 @@ variables:
     # - docker push ${DOCKERHUB_NAME}:${SOFTWARE_VERSION}
   after_script:
     - docker logout ${CI_REGISTRY}
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
 
 
