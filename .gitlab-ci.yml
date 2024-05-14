@@ -48,17 +48,14 @@ variables:
     # TODO More secure way to authenticate to GitLab Container Registry
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker pull ${CR_NAME}:latest || true
-    - docker build --cache-from ${CR_NAME}:latest --rm=true -t ${CR_NAME}:latest ${DOCKERFILE_DIR}
-    - SOFTWARE_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.version"}}' ${CR_NAME})
-    - docker tag ${CR_NAME} ${CR_NAME}:${SOFTWARE_VERSION}
+    - docker build --cache-from ${CR_NAME}:latest --rm=true -t ${CR_NAME}:${CI_COMMIT_SHA} ${DOCKERFILE_DIR}
+    - SOFTWARE_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.version"}}' ${CR_NAME}:${CI_COMMIT_SHA})
+    - docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:${SOFTWARE_VERSION}
     - docker push ${CR_NAME}:${SOFTWARE_VERSION}
+    - docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:${SOFTWARE_VERSION}-${CI_COMMIT_SHORT_SHA}
+    - docker push ${CR_NAME}:${SOFTWARE_VERSION}-${CI_COMMIT_SHORT_SHA}
     - LATEST_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.latest_version"}}' ${CR_NAME})
-    - |
-      if [ "${LATEST_VERSION}" == "true" ]; then
-          echo "The software version ${SOFTWARE_VERSION} associated with latest version ${LATEST_VERSION}"
-          docker tag ${CR_NAME}:${SOFTWARE_VERSION} ${CR_NAME}:latest
-          docker push ${CR_NAME}:latest
-      fi
+    - if [ "${LATEST_VERSION}" == "true" ]; then docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:latest; docker push ${CR_NAME}:latest; fi
     # TODO: More secure way to authenticate to Docker Hub
     # - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
     # - docker tag ${CR_NAME}:latest ${DOCKERHUB_NAME}:latest
