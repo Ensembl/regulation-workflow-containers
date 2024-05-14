@@ -32,9 +32,6 @@ variables:
       fi
   retry:
     max: 2
-    when:
-      - runner_system_failure
-      - stuck_or_timeout_failure
 
 .build:
   image: docker:20.10
@@ -48,8 +45,7 @@ variables:
     - docker info
     - echo "$CI_JOB_TOKEN" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
   script:
-    - docker pull ${CR_NAME}:latest || true
-    - docker build --cache-from ${CR_NAME}:latest --rm=true -t ${CR_NAME}:${CI_COMMIT_SHA} ${DOCKERFILE_DIR}
+    - docker build --rm=true -t ${CR_NAME}:${CI_COMMIT_SHA} ${DOCKERFILE_DIR}
     - SOFTWARE_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.version"}}' ${CR_NAME}:${CI_COMMIT_SHA})
     - docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:${SOFTWARE_VERSION}
     - docker push ${CR_NAME}:${SOFTWARE_VERSION}
@@ -58,7 +54,7 @@ variables:
     - docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:${SOFTWARE_VERSION}-${SHORT_ID}
     - docker push ${CR_NAME}:${SOFTWARE_VERSION}-${SHORT_ID}
 
-    - LATEST_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.latest_version"}}' ${CR_NAME})
+    - LATEST_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.latest_version"}}' ${CR_NAME}:${SOFTWARE_VERSION})
     - if [ "${LATEST_VERSION}" == "true" ]; then docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:latest; docker push ${CR_NAME}:latest; fi
     # TODO: More secure way to authenticate to Docker Hub
     # - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
