@@ -53,8 +53,11 @@ variables:
     - SOFTWARE_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.version"}}' ${CR_NAME}:${CI_COMMIT_SHA})
     - docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:${SOFTWARE_VERSION}
     - docker push ${CR_NAME}:${SOFTWARE_VERSION}
-    - docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:${SOFTWARE_VERSION}-${CI_COMMIT_SHORT_SHA}
-    - docker push ${CR_NAME}:${SOFTWARE_VERSION}-${CI_COMMIT_SHORT_SHA}
+
+    - SHORT_ID=$(docker inspect -f '{{index .Id}}' ${CR_NAME}:${CI_COMMIT_SHA} | cut -c8-19)
+    - docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:${SOFTWARE_VERSION}-${SHORT_ID}
+    - docker push ${CR_NAME}:${SOFTWARE_VERSION}-${SHORT_ID}
+
     - LATEST_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.latest_version"}}' ${CR_NAME})
     - if [ "${LATEST_VERSION}" == "true" ]; then docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:latest; docker push ${CR_NAME}:latest; fi
     # TODO: More secure way to authenticate to Docker Hub
