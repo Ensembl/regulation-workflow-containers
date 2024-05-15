@@ -5,13 +5,11 @@ include:
   - local: 'configs/gitlab-ci/**.yml'
   - template: Jobs/Container-Scanning.gitlab-ci.yml
 
-container_scanning:
-  variables:
-    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}:latest
 
 stages:
   - test
   - build
+  - security-checks
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -77,3 +75,18 @@ variables:
       - runner_system_failure
 
 
+  #container_scanning:
+  #  variables:
+  #    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}:latest
+  #
+  #
+container_scanning:
+  stage: security-checks
+  #  parallel:
+  #    matrix:
+  #      - IMAGE_NAME: [ "$APP_1", "$APP_2" ]
+  variables:
+    GIT_STRATEGY: fetch
+    CONTAINER_SCANNING_DISABLED: '$CONTAINER_SCANNING_DISABLED'
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
