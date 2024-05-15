@@ -32,3 +32,12 @@ scan-bash-5.2-alpine3.19:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
   needs: [ "build-bash-5.2-alpine3.19" ]
+
+scan-bash-latest:
+  extends:
+    - .container_scanning
+    - .bash-5.2-alpine3.19
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-bash-5.2-alpine3.19" ]
