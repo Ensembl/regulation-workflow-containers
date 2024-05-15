@@ -13,6 +13,14 @@ LABEL mantainer.email="durbina@ebi.ac.uk"
 
 RUN apk add --no-cache tar pigz
 
-RUN  mkdir /results
+RUN addgroup -g 8737 ensreg \
+    && adduser -u 8737 -G ensreg -D ensreg
+
+USER 8737
+
+RUN mkdir /home/ensreg/workdir \
+    && chmod 777 /home/ensreg/workdir
+
+WORKDIR /home/ensreg/workdir
 
 CMD ["bash"]
