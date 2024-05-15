@@ -58,7 +58,7 @@ variables:
     - docker push ${CR_NAME}:${SOFTWARE_VERSION}-${SHORT_ID}
 
     - LATEST_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.latest_version"}}' ${CR_NAME}:${SOFTWARE_VERSION})
-    - if [ ${LATEST_VERSION} == "true" ]; then docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:latest; docker push ${CR_NAME}:latest; fi
+    - if [ "${LATEST_VERSION}" = "true" ]; then docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:latest; docker push ${CR_NAME}:latest; fi
     # TODO: More secure way to authenticate to Docker Hub
     # - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
     # - docker tag ${CR_NAME}:latest ${DOCKERHUB_NAME}:latest
@@ -69,8 +69,6 @@ variables:
     - docker logout ${CI_REGISTRY}
   retry:
     max: 2
-    when:
-      - runner_system_failure
 
 
   #container_scanning:
