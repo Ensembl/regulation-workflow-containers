@@ -1,16 +1,5 @@
 FROM ubuntu:20.04 AS builder
 
-LABEL software="wiggletools"
-LABEL software.version="1.2.11"
-LABEL about.summary="Basic operations on the space of numerical functions defined on the genome using lazy evaluators for flexibility and efficiency"
-LABEL about.home="https://github.com/Ensembl/WiggleTools"
-LABEL about.documentation="https://github.com/Ensembl/WiggleTools/blob/master/README.md"
-LABEL about.license="https://github.com/Ensembl/WiggleTools?tab=Apache-2.0-1-ov-file"
-
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
-
-
 RUN apt-get update \
     && apt-get install -y  --no-install-recommends\
     ca-certificates \
@@ -32,6 +21,18 @@ RUN   make test
 
 
 FROM ubuntu:20.04
+
+LABEL software="wiggletools"
+LABEL software.version="1.2.11"
+LABEL about.summary="Basic operations on the space of numerical functions defined on the genome using lazy evaluators for flexibility and efficiency"
+LABEL about.home="https://github.com/Ensembl/WiggleTools"
+LABEL about.documentation="https://github.com/Ensembl/WiggleTools/blob/master/README.md"
+LABEL about.license="https://github.com/Ensembl/WiggleTools?tab=Apache-2.0-1-ov-file"
+
+LABEL mantainer="David Urbina-Gómez"
+LABEL mantainer.email="durbina@ebi.ac.uk"
+
+
 RUN  apt-get update \
     && apt-get install -y \
     libbigwig0 \
