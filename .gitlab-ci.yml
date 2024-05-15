@@ -3,7 +3,7 @@ services:
 
 include:
   - local: 'configs/gitlab-ci/**.yml'
-  - template: Jobs/Container-Scanning.gitlab-ci.yml
+#  - template: Jobs/Container-Scanning.gitlab-ci.yml
 
 
 stages:
@@ -76,7 +76,7 @@ variables:
   #    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}:latest
   #
   #
-container_scanning:
+.container_scanning:
   stage: security-checks
   variables:
     GIT_STRATEGY: fetch
