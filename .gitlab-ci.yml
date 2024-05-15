@@ -3,6 +3,11 @@ services:
 
 include:
   - local: 'configs/gitlab-ci/**.yml'
+  - template: Jobs/Container-Scanning.gitlab-ci.yml
+
+container_scanning:
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}:latest
 
 stages:
   - test
