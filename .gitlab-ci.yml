@@ -58,7 +58,7 @@ variables:
     - docker push ${CR_NAME}:${SOFTWARE_VERSION}-${SHORT_ID}
 
     - LATEST_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.latest_version"}}' ${CR_NAME}:${SOFTWARE_VERSION})
-    - if [ "${LATEST_VERSION}" == "true" ]; then docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:latest; docker push ${CR_NAME}:latest; fi
+    - if [ ${LATEST_VERSION} == "true" ]; then docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:latest; docker push ${CR_NAME}:latest; fi
     # TODO: More secure way to authenticate to Docker Hub
     # - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
     # - docker tag ${CR_NAME}:latest ${DOCKERHUB_NAME}:latest
@@ -80,11 +80,6 @@ variables:
   #
 container_scanning:
   stage: security-checks
-  #  parallel:
-  #    matrix:
-  #      - IMAGE_NAME: [ "$APP_1", "$APP_2" ]
   variables:
     GIT_STRATEGY: fetch
     CONTAINER_SCANNING_DISABLED: '$CONTAINER_SCANNING_DISABLED'
-    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}:latest
-    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile

@@ -1,6 +1,7 @@
 .bash:
   variables:
     DOCKERFILE_DIR: dockerfiles/bash/5.2.21
+    IMAGE_NAME: bash
   # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
   rules:
     - changes:
@@ -18,5 +19,15 @@ build-bash:
     - .build
     - .bash
   variables:
-    CONTAINER_IMAGE_NAME: bash
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
   needs: [ "test-bash" ]
+
+
+scan-bash:
+  extends:
+    - container_scanning
+    - .bash
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-bash" ]
