@@ -1,0 +1,33 @@
+.bash-5.2-alpine3.19:
+  variables:
+    DOCKERFILE_DIR: dockerfiles/bash/5.2-alpine3.19
+    IMAGE_NAME: bash
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/bash/5.2-alpine3.19.yml
+        - dockerfiles/bash/5.2-alpine3.19/*
+        - .gitlab-ci.yml
+
+test-bash-5.2-alpine3.19:
+  extends:
+    - .test
+    - .bash-5.2-alpine3.19
+
+build-bash-5.2-alpine3.19:
+  extends:
+    - .build
+    - .bash-5.2-alpine3.19
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  needs: [ "test-bash-5.2-alpine3.19" ]
+
+
+scan-bash-5.2-alpine3.19:
+  extends:
+    - container_scanning
+    - .bash-5.2-alpine3.19
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-bash-5.2-alpine3.19" ]
