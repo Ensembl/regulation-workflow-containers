@@ -1,0 +1,42 @@
+.genrich-0.6.1:
+  variables:
+    IMAGE_NAME: genrich
+    IMAGE_VERSION: 0.6.1
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/genrich/0.6.1.yml
+        - dockerfiles/genrich/0.6.1/*
+        - .gitlab-ci.yml
+
+test-genrich-0.6.1:
+  extends:
+    - .test
+    - .genrich-0.6.1
+
+build-genrich-0.6.1:
+  extends:
+    - .build
+    - .genrich-0.6.1
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  needs: [ "test-genrich-0.6.1" ]
+
+scan-genrich-0.6.1:
+  extends:
+    - .container_scanning
+    - .genrich-0.6.1
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-genrich-0.6.1" ]
+
+scan-genrich-latest:
+  extends:
+    - .container_scanning
+    - .genrich-0.6.1
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-genrich-0.6.1" ]

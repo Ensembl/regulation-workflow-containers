@@ -1,4 +1,4 @@
-FROM bitnami/minideb:bullseye as builder
+FROM bitnami/minideb:bookworm as builder
 
 RUN install_packages  \
     gcc \
@@ -11,10 +11,11 @@ RUN git clone --depth 1 --branch v0.6.1 https://github.com/jsh58/Genrich.git
 WORKDIR Genrich
 RUN make
 
-FROM bitnami/minideb:bullseye
+FROM bitnami/minideb:bookworm
 
 LABEL software="Genrich"
 LABEL software.version="0.6.1"
+LABEL software.latest_version="true"
 LABEL about.summary="Detecting sites of genomic enrichment"
 LABEL about.home="https://github.com/jsh58/Genrich"
 LABEL about.documentation="https://github.com/jsh58/Genrich/blob/v0.6.1/README.md"
@@ -24,12 +25,19 @@ LABEL mantainer="David Urbina-Gómez"
 LABEL mantainer.email="durbina@ebi.ac.uk"
 
 COPY --from=builder /Genrich/Genrich /usr/local/bin/
-WORKDIR /mnt
 
 COPY run_tests.sh /usr/local/bin/
-RUN  chmod 755 /usr/local/bin/run_tests.sh \
-     && mkdir /results
+RUN  chmod 755 /usr/local/bin/run_tests.sh
 
-COPY mt.queryname_sorted.bam /mnt/
+RUN useradd ensreg -u 8737 --create-home --user-group
+
+USER 8737
+
+RUN mkdir /home/ensreg/workdir \
+    && chmod 777 /home/ensreg/workdir
+
+WORKDIR /home/ensreg/workdir
+
+COPY mt.queryname_sorted.bam /home/ensreg/workdir/
 
 CMD ["Genrich"]
