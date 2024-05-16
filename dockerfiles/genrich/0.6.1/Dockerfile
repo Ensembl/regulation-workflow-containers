@@ -36,8 +36,8 @@ USER 8737
 RUN mkdir /home/ensreg/workdir \
     && chmod 777 /home/ensreg/workdir
 
-WORKDIR /home/ensreg/workdir
+COPY mt.queryname_sorted.bam /home/ensreg/workdir
 
-COPY mt.queryname_sorted.bam /home/ensreg/workdir/
+WORKDIR /home/ensreg/workdir
 
 CMD ["Genrich"]
