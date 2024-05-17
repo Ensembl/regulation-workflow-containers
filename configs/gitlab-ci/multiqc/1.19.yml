@@ -1,0 +1,33 @@
+.multiqc-1.19:
+  variables:
+    IMAGE_NAME: multiqc
+    IMAGE_VERSION: "1.19"
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/multiqc/1.19.yml
+        - dockerfiles/multiqc/1.19/*
+        - .gitlab-ci.yml
+
+test-multiqc-1.19:
+  extends:
+    - .test
+    - .multiqc-1.19
+
+build-multiqc-1.19:
+  extends:
+    - .build
+    - .multiqc-1.19
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  needs: [ "test-multiqc-1.19" ]
+
+scan-multiqc-1.19:
+  extends:
+    - .container_scanning
+    - .multiqc-1.19
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-multiqc-1.19" ]
