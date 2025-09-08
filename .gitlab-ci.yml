@@ -1,5 +1,5 @@
 services:
-  - docker:20-dind
+  - docker:28.4-dind
 
 include:
   - local: 'configs/gitlab-ci/**.yml'
@@ -16,7 +16,7 @@ variables:
   DOCKER_TLS_CERTDIR: ""
 
 .test:
-  image: docker:20.10
+  image: docker:28.4
   stage: test
   before_script:
     - docker --version
@@ -37,7 +37,7 @@ variables:
     max: 2
 
 .build:
-  image: docker:20.10
+  image: docker:28.4
   stage: build
   variables:
     CR_NAME: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}
