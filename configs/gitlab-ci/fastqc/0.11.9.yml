@@ -1,0 +1,43 @@
+.fastqc-0.11.9:
+  variables:
+    IMAGE_NAME: fastqc
+    IMAGE_VERSION: 0.11.9
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/fastqc/0.11.9.yml
+        - dockerfiles/fastqc/0.11.9/*
+        - .gitlab-ci.yml
+
+test-fastqc-0.11.9:
+  extends:
+    - .test
+    - .fastqc-0.11.9
+
+build-fastqc-0.11.9:
+  extends:
+    - .build
+    - .fastqc-0.11.9
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  needs: [ "test-fastqc-0.11.9" ]
+
+
+scan-fastqc-0.11.9:
+  extends:
+    - .container_scanning
+    - .fastqc-0.11.9
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-fastqc-0.11.9" ]
+
+scan-fastqc-latest:
+  extends:
+    - .container_scanning
+    - .fastqc-0.11.9
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-fastqc-0.11.9" ]
