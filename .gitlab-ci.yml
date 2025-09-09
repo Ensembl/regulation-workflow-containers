@@ -21,6 +21,7 @@ variables:
   before_script:
     - docker --version
     - docker-compose --version
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
   script:
     - |
       if [ -f ${DOCKERFILE_DIR}/docker-compose.test.yml ]; then
@@ -46,11 +47,12 @@ variables:
     # TODO: Consider splitting in different jobs pushing to GitLab Container Registry and Docker Hub
   before_script:
     - docker info
-    - echo "$CI_JOB_TOKEN" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
   script:
     - docker build --rm=true -t ${CR_NAME}:${CI_COMMIT_SHA} ${DOCKERFILE_DIR}
     - SOFTWARE_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.version"}}' ${CR_NAME}:${CI_COMMIT_SHA})
     - docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:${SOFTWARE_VERSION}
+    - echo "$CI_JOB_TOKEN" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
     - docker push ${CR_NAME}:${SOFTWARE_VERSION}
 
     - SHORT_ID=$(docker inspect --format='{{index .RepoDigests 0}}'  ${CR_NAME}:${CI_COMMIT_SHA} | awk -F'@sha256:' '{print $2}' | cut -c1-12)
