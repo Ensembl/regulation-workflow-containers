@@ -51,5 +51,4 @@ RUN chmod 755 /usr/local/bin/run_tests.sh
 USER ensreg
 WORKDIR ${WORKDIR}
 
-ENTRYPOINT ["NGmerge"]
-CMD []
+CMD ["NGmerge"]
