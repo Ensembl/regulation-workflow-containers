@@ -1,0 +1,43 @@
+.fastp-0.23.2:
+  variables:
+    IMAGE_NAME: fastp
+    IMAGE_VERSION: 0.23.2
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/fastp/0.23.2.yml
+        - dockerfiles/fastp/0.23.2/*
+        - .gitlab-ci.yml
+
+test-fastp-0.23.2:
+  extends:
+    - .test
+    - .fastp-0.23.2
+
+build-fastp-0.23.2:
+  extends:
+    - .build
+    - .fastp-0.23.2
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  needs: [ "test-fastp-0.23.2" ]
+
+
+scan-fastp-0.23.2:
+  extends:
+    - .container_scanning
+    - .fastp-0.23.2
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-fastp-0.23.2" ]
+
+scan-fastp-latest:
+  extends:
+    - .container_scanning
+    - .fastp-0.23.2
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-fastp-0.23.2" ]
