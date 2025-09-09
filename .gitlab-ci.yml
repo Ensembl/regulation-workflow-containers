@@ -42,7 +42,6 @@ variables:
   stage: build
   variables:
     CR_NAME: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}
-    #    DOCKERHUB_NAME: ensemblorg/${CONTAINER_IMAGE_NAME
     # TODO: Consider splitting this into two jobs, one for building and one for pushing
     # TODO: Consider splitting in different jobs pushing to GitLab Container Registry and Docker Hub
   before_script:
@@ -72,12 +71,6 @@ variables:
   retry:
     max: 2
 
-
-  #container_scanning:
-  #  variables:
-  #    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}:latest
-  #
-  #
 .container_scanning:
   stage: security-checks
   variables:
