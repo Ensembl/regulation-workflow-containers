@@ -1,5 +1,6 @@
 services:
-  - docker:28.4-dind
+  - name: docker:28.4-dind
+    command: ["--tls=false"]
 
 include:
   - local: 'configs/gitlab-ci/**.yml'
