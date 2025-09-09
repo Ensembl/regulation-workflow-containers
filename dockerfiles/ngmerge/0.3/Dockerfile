@@ -33,12 +33,16 @@ LABEL software="NGmerge" \
 # Runtime dependencies
 RUN install_packages libgomp1
 
-ENV WORKDIR="/home/ensreg/workdir"
+ARG USER_NAME="ensreg"
+ARG GROUP_NAME="ensreg"
+
+ENV HOME="/home/${USER_NAME}"
+ENV WORKDIR="${HOME}/workdir"
 
 # Create non-root user and working directory
-RUN useradd -u 8737 -m -s /bin/bash ensreg && \
+RUN useradd -u 8737 -m -s /bin/bash ${USER_NAME} && \
     mkdir -p ${WORKDIR}  && \
-    chown -R ensreg:ensreg /home/ensreg && \
+    chown -R ${USER_NAME}:${GROUP_NAME} ${HOME} && \
     chmod 777 ${WORKDIR}
 
 # Copy built binary from builder stage
@@ -48,7 +52,7 @@ COPY --from=builder /build/NGmerge/NGmerge /usr/local/bin/
 COPY run_tests.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/run_tests.sh
 
-USER ensreg
+USER ${USER_NAME}
 WORKDIR ${WORKDIR}
 
 CMD ["NGmerge"]
