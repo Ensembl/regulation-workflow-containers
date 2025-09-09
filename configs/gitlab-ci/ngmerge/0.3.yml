@@ -1,0 +1,43 @@
+.ngmerge-0.3:
+  variables:
+    IMAGE_NAME: ngmerge
+    IMAGE_VERSION: 0.3
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/ngmerge/0.3.yml
+        - dockerfiles/ngmerge/0.3/*
+        - .gitlab-ci.yml
+
+test-ngmerge-0.3:
+  extends:
+    - .test
+    - .ngmerge-0.3
+
+build-ngmerge-0.3:
+  extends:
+    - .build
+    - .ngmerge-0.3
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  needs: [ "test-ngmerge-0.3" ]
+
+
+scan-ngmerge-0.3:
+  extends:
+    - .container_scanning
+    - .ngmerge-0.3
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-ngmerge-0.3" ]
+
+scan-ngmerge-latest:
+  extends:
+    - .container_scanning
+    - .ngmerge-0.3
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-ngmerge-0.3" ]
