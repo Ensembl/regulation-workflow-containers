@@ -7,8 +7,8 @@ LABEL about.home="http://hgdownload.cse.ucsc.edu/admin/exe/"
 LABEL about.documentation="https://genome.ucsc.edu/goldenPath/help/bigBed.html"
 LABEL about.license="https://github.com/ucscGenomeBrowser/kent/blob/master/LICENSE"
 
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 
 RUN apt-get update  \

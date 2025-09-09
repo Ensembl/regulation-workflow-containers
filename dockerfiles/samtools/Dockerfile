@@ -8,8 +8,8 @@ LABEL about.home="https://github.com/samtools/samtools"
 LABEL about.documentation="http://www.htslib.org/doc/samtools.html"
 LABEL about.license="https://github.com/samtools/samtools/blob/develop/LICENSE"
 
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 RUN apk add --no-cache \
     autoconf \

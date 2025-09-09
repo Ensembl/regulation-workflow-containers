@@ -28,8 +28,8 @@ LABEL about.home="https://bowtie-bio.sourceforge.net/bowtie2/index.shtml"
 LABEL about.documentation="https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml"
 LABEL about.license="https://github.com/BenLangmead/bowtie2?tab=GPL-3.0-1-ov-file"
 
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 COPY --from=builder /bowtie2 /usr/local/bin/
 

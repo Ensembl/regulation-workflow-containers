@@ -29,8 +29,8 @@ LABEL about.home="https://github.com/Ensembl/WiggleTools"
 LABEL about.documentation="https://github.com/Ensembl/WiggleTools/blob/master/README.md"
 LABEL about.license="https://github.com/Ensembl/WiggleTools?tab=Apache-2.0-1-ov-file"
 
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 
 RUN  apt-get update \

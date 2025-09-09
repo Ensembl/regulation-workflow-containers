@@ -20,8 +20,8 @@ LABEL about.home="https://github.com/jsh58/NGmerge"
 LABEL about.documentation="https://github.com/jsh58/NGmerge/blob/master/README.md"
 LABEL about.license="https://github.com/jsh58/NGmerge/tree/master?tab=MIT-1-ov-file"
 
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 RUN install_packages  \
     libgomp1

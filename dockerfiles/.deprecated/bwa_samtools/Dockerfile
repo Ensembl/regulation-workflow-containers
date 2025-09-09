@@ -38,8 +38,8 @@ FROM  alpine:3.12
 #LABEL about.documentation="http://www.htslib.org/doc/samtools.html"
 #LABEL license="https://github.com/samtools/samtools/blob/develop/LICENSE"
 
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 COPY --from=bwa_builder /usr/local/bin/* /usr/local/bin/
 

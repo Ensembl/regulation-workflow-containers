@@ -8,8 +8,8 @@ LABEL about.home="https://tiswww.case.edu/php/chet/bash/bashtop.html"
 LABEL about.documentation="https://tiswww.case.edu/php/chet/bash/README"
 LABEL about.license="https://www.gnu.org/licenses/gpl-3.0.html"
 
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 RUN apk add --no-cache tar pigz
 

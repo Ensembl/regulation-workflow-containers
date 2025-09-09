@@ -7,8 +7,8 @@ LABEL about.home="https://github.com/jhkorhonen/MOODS"
 LABEL about.documentation="https://github.com/jhkorhonen/MOODS/blob/master/readme.MD"
 LABEL about.license="https://github.com/jhkorhonen/MOODS?tab=GPL-3.0-2-ov-file"
 
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 COPY requirements.txt /tmp/
 

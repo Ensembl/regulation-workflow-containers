@@ -8,8 +8,8 @@ LABEL about.home="https://github.com/arq5x/bedtools2"
 LABEL about.documentation="https://bedtools.readthedocs.io/en/latest/"
 LABEL about.license="https://github.com/arq5x/bedtools2?tab=MIT-1-ov-file"
 
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 
 RUN apt-get update  \

@@ -7,8 +7,8 @@ LABEL about.home="http://hgdownload.cse.ucsc.edu/admin/exe/"
 LABEL about.documentation="https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64.v369/"
 LABEL about.license="https://github.com/ucscGenomeBrowser/kent/blob/master/LICENSE"
 
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 RUN apt-get update  \
     && apt-get install -y --no-install-recommends  \

@@ -7,8 +7,8 @@ LABEL about.home="https://www.python.org/"
 LABEL about.documentation="https://docs.python.org/3/"
 LABEL about.license="https://docs.python.org/3/license.html#psf-license"
 
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 COPY requirements.txt /tmp/
 

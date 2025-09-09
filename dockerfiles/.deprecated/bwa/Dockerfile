@@ -28,8 +28,8 @@ LABEL about.summary="BWA is a software package for mapping low-divergent sequenc
 LABEL about.home="http://bio-bwa.sourceforge.net/"
 LABEL about.documentation="http://bio-bwa.sourceforge.net/bwa.shtml"
 LABEL license="http://bio-bwa.sourceforge.net/bwa.shtml#13"
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 COPY --from=builder /usr/local/bin/* /usr/local/bin/
 

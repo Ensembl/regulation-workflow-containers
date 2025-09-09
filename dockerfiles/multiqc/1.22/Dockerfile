@@ -8,8 +8,8 @@ LABEL about.home="https://multiqc.info/"
 LABEL about.documentation="https://multiqc.info/docs/"
 LABEL license="https://github.com/MultiQC/MultiQC?tab=GPL-3.0-1-ov-file"
 
-LABEL mantainer="David Urbina-Gómez"
-LABEL mantainer.email="durbina@ebi.ac.uk"
+LABEL maintainer="David Urbina-Gómez"
+LABEL maintainer.email="durbina@ebi.ac.uk"
 
 
 COPY requirements.txt /tmp/
