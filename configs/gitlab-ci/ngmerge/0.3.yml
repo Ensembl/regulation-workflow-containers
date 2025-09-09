@@ -14,8 +14,6 @@ test-ngmerge-0.3:
   extends:
     - .test
     - .ngmerge-0.3
-  privileged: true
-
 
 build-ngmerge-0.3:
   extends:
@@ -23,7 +21,6 @@ build-ngmerge-0.3:
     - .ngmerge-0.3
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  privileged: true  
   needs: [ "test-ngmerge-0.3" ]
 
 
