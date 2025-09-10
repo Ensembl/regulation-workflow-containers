@@ -1,69 +1,94 @@
-FROM bitnami/minideb:bullseye as builder
+ARG BOWTIE2_VERSION="2.4.5"
+ARG SAMTOOLS_VERSION="1.15.1"
 
+# ----------- Builder stage -----------
+FROM bitnami/minideb:bullseye AS builder
 
-RUN install_packages  \
-    git \
+ARG BOWTIE2_VERSION
+ARG SAMTOOLS_VERSION
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
     wget \
     unzip \
-    ca-certificates
-
-ENV VERSION=2.4.5
-ENV BINNARY_PREFIX=bowtie2-${VERSION}-linux-x86_64
-
-# https://github.com/BenLangmead/bowtie2/releases/download/v2.4.5/bowtie2-2.4.5-linux-x86_64.zip
-RUN wget https://github.com/BenLangmead/bowtie2/releases/download/v${VERSION}/${BINNARY_PREFIX}.zip \
-    && unzip ${BINNARY_PREFIX}.zip \
-    && mkdir bowtie2 \
-    && cp -r ${BINNARY_PREFIX}/* bowtie2/ \
-    && rm -r ${BINNARY_PREFIX} ${BINNARY_PREFIX}.zip
-
-WORKDIR bowtie2
-
-FROM bitnami/minideb:bullseye
-
-LABEL software="Bowtie2"
-LABEL software.version="2.4.5"
-LABEL about.summary="An ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences."
-LABEL about.home="https://bowtie-bio.sourceforge.net/bowtie2/index.shtml"
-LABEL about.documentation="https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml"
-LABEL about.license="https://github.com/BenLangmead/bowtie2?tab=GPL-3.0-1-ov-file"
-
-LABEL maintainer="David Urbina-Gómez"
-LABEL maintainer.email="durbina@ebi.ac.uk"
-
-COPY --from=builder /bowtie2 /usr/local/bin/
-
-RUN install_packages  \
-    perl \
-    python3 \
-    autoconf \
-    automake \
-    make \
-    gcc \
-    musl-dev \
-    bash \
-    bzip2 \
-    zlib1g-dev \
+    git \
+    ca-certificates \
     libbz2-dev \
-    wget \
-    libcurl4-openssl-dev \
     liblzma-dev \
     libncurses-dev \
-    ca-certificates
+    libcurl4-openssl-dev \
+    zlib1g-dev \
+    autoconf \
+    automake \
+    python3 \
+    perl \
+    && rm -rf /var/lib/apt/lists/*
 
-ENV SAMTOOLS_VERSION="1.15.1"
+# Download and prepare Bowtie2
+ENV BOWTIE2_BINARY_PREFIX=bowtie2-${BOWTIE2_VERSION}-linux-x86_64
+RUN wget -q https://github.com/BenLangmead/bowtie2/releases/download/v${BOWTIE2_VERSION}/${BOWTIE2_BINARY_PREFIX}.zip \
+    && unzip ${BOWTIE2_BINARY_PREFIX}.zip \
+    && cp -r ${BOWTIE2_BINARY_PREFIX}/* /usr/local/bin/ \
+    && rm -rf ${BOWTIE2_BINARY_PREFIX} ${BOWTIE2_BINARY_PREFIX}.zip
+
+# Download, build, and install Samtools
 ENV SAMTOOLS_DOWNLOAD_URL="https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2"
-
 WORKDIR /tmp
-
 RUN wget -q ${SAMTOOLS_DOWNLOAD_URL} \
-    && tar xjvf samtools-${SAMTOOLS_VERSION}.tar.bz2 \
-    && cd samtools-${SAMTOOLS_VERSION}/ \
-    && ./configure \
+    && tar -xjf samtools-${SAMTOOLS_VERSION}.tar.bz2 \
+    && cd samtools-${SAMTOOLS_VERSION} \
+    && ./configure --prefix=/usr/local \
     && make \
     && make install \
-    && rm -rf /tmp/*
+    && cd /tmp \
+    && rm -rf samtools-${SAMTOOLS_VERSION} samtools-${SAMTOOLS_VERSION}.tar.bz2
 
+# ----------- Final runtime image -----------
+FROM bitnami/minideb:bullseye
+
+ARG BOWTIE2_VERSION
+ARG SAMTOOLS_VERSION
+
+LABEL software="Bowtie2 + Samtools" \
+      software.version="${BOWTIE2_VERSION}_${SAMTOOLS_VERSION}" \
+      about.summary="Bowtie2: An ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences.; Samtools: Suite of programs for interacting with high-throughput sequencing data." \
+      about.home="https://bowtie-bio.sourceforge.net/bowtie2/index.shtml; https://github.com/samtools/samtools" \
+      about.documentation="https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml; http://www.htslib.org/doc/samtools.html" \
+      about.license="Bowtie2: GPL-3.0; Samtools: MIT" \
+      maintainer="David Urbina-Gómez" \
+      maintainer.email="durbina@ebi.ac.uk"
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    bash \
+    perl \
+    python3 \
+    bzip2 \
+    zlib1g \
+    libbz2-1.0 \
+    liblzma5 \
+    libncurses6 \
+    libcurl4 \
+    && rm -rf /var/lib/apt/lists/*
+
+ARG USER_NAME="ensreg"
+ARG GROUP_NAME="ensreg"
+
+ENV HOME="/home/${USER_NAME}"
+ENV WORKDIR="${HOME}/workdir"
+
+# Create non-root user and working directory
+RUN useradd -u 8737 -m -s /bin/bash ${USER_NAME} && \
+    mkdir -p ${WORKDIR}  && \
+    chown -R ${USER_NAME}:${GROUP_NAME} ${HOME} && \
+    chmod 777 ${WORKDIR}
+
+
+# Copy built tools from builder
+COPY --from=builder /usr/local/bin/samtools /usr/local/bin/
+COPY --from=builder /usr/local/bin/bowtie2* /usr/local/bin/
 
 COPY run_tests.sh /usr/local/bin/
 RUN  chmod 755 /usr/local/bin/run_tests.sh \

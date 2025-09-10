@@ -1,0 +1,43 @@
+.bowtie2_samtools-2.4.5_1.15.1:
+  variables:
+    IMAGE_NAME: bowtie2_samtools
+    IMAGE_VERSION: 2.4.5_1.15.1
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/bowtie2_samtools/2.4.5_1.15.1.yml
+        - dockerfiles/bowtie2_samtools/2.4.5_1.15.1/*
+        - .gitlab-ci.yml
+
+test-bowtie2_samtools-2.4.5_1.15.1:
+  extends:
+    - .test
+    - .bowtie2_samtools-2.4.5_1.15.1
+
+build-bowtie2_samtools-2.4.5_1.15.1:
+  extends:
+    - .build
+    - .bowtie2_samtools-2.4.5_1.15.1
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  needs: [ "test-bowtie2_samtools-2.4.5_1.15.1" ]
+
+
+scan-bowtie2_samtools-2.4.5_1.15.1:
+  extends:
+    - .container_scanning
+    - .bowtie2_samtools-2.4.5_1.15.1
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-bowtie2_samtools-2.4.5_1.15.1" ]
+
+scan-bowtie2_samtools-latest:
+  extends:
+    - .container_scanning
+    - .bowtie2_samtools-2.4.5_1.15.1
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-bowtie2_samtools-2.4.5_1.15.1" ]
