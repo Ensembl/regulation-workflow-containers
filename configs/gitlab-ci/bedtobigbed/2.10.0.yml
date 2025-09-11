@@ -1,0 +1,43 @@
+.bedtobigbed-2.10.0:
+  variables:
+    IMAGE_NAME: bedtobigbed
+    IMAGE_VERSION: 2.10.0
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/bedtobigbed/2.10.0.yml
+        - dockerfiles/bedtobigbed/2.10.0/*
+        - .gitlab-ci.yml
+
+test-bedtobigbed-2.10.0:
+  extends:
+    - .test
+    - .bedtobigbed-2.10.0
+
+build-bedtobigbed-2.10.0:
+  extends:
+    - .build
+    - .bedtobigbed-2.10.0
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  needs: [ "test-bedtobigbed-2.10.0" ]
+
+
+scan-bedtobigbed-2.10.0:
+  extends:
+    - .container_scanning
+    - .bedtobigbed-2.10.0
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-bedtobigbed-2.10.0" ]
+
+scan-bedtobigbed-latest:
+  extends:
+    - .container_scanning
+    - .bedtobigbed-2.10.0
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-bedtobigbed-2.10.0" ]
