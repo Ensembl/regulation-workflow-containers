@@ -44,6 +44,4 @@ WORKDIR ${WORKDIR}
 COPY --chown=${USER_NAME}:${GROUP_NAME} run_tests.sh /usr/local/bin/run_tests.sh
 RUN chmod 755 /usr/local/bin/run_tests.sh
 
-# Default entrypoint
-ENTRYPOINT ["bedSort"]
-CMD ["--help"]
+CMD [""]
