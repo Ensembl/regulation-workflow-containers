@@ -2,6 +2,8 @@ ARG FASIZE_VERSION="v459"
 
 FROM bitnami/minideb:bullseye
 
+ARG FASIZE_VERSION
+
 LABEL software="faSize" \
       software.version="${FASIZE_VERSION}" \
       about.summary="Print total base count in fa files." \

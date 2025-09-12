@@ -2,6 +2,8 @@ ARG BEDGRAPHTOBIGWIG_VERSION="2.10.0"
 
 FROM bitnami/minideb:bullseye
 
+ARG BEDGRAPHTOBIGWIG_VERSION
+
 LABEL software="bedGraphToBigWig" \
       software.version="${BEDGRAPHTOBIGWIG_VERSION}" \
       about.summary="Convert a bedGraph file to bigWig format." \
