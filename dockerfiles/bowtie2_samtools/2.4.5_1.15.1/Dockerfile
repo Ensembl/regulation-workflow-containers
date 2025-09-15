@@ -85,13 +85,14 @@ RUN useradd -u 8737 -m -s /bin/bash ${USER_NAME} && \
     chown -R ${USER_NAME}:${GROUP_NAME} ${HOME} && \
     chmod 777 ${WORKDIR}
 
-
 # Copy built tools from builder
 COPY --from=builder /usr/local/bin/samtools /usr/local/bin/
 COPY --from=builder /usr/local/bin/bowtie2* /usr/local/bin/
 
 COPY run_tests.sh /usr/local/bin/
-RUN  chmod 755 /usr/local/bin/run_tests.sh \
-     && mkdir /results
+RUN  chmod 755 /usr/local/bin/run_tests.sh
+
+USER ${USER_NAME}
+WORKDIR ${WORKDIR}
 
 CMD ["bowtie2"]
