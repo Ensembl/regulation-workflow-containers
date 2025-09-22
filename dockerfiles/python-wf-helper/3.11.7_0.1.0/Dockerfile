@@ -10,6 +10,12 @@ LABEL about.license="https://docs.python.org/3/license.html#psf-license"
 LABEL maintainer="David Urbina-Gómez"
 LABEL maintainer.email="durbina@ebi.ac.uk"
 
+ARG USER_NAME="ensreg"
+ARG GROUP_NAME="ensreg"
+
+ENV HOME="/home/${USER_NAME}"
+ENV WORKDIR="${HOME}/workdir"
+
 COPY requirements.txt /tmp/
 
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
@@ -17,13 +23,13 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 COPY run_tests.sh /usr/local/bin/
 RUN  chmod 755 /usr/local/bin/run_tests.sh
 
-RUN useradd ensreg -u 8737 --create-home --user-group
+RUN useradd ${USER_NAME} -u 8737 --create-home --user-group
 
 USER 8737
 
-RUN mkdir /home/ensreg/workdir \
-    && chmod 777 /home/ensreg/workdir
+RUN mkdir ${WORKDIR} \
+    && chmod 777 ${WORKDIR}
 
-WORKDIR /home/ensreg/workdir
+WORKDIR ${WORKDIR}
 
 CMD ["python"]
