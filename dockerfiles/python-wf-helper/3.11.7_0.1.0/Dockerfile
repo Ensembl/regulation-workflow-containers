@@ -25,11 +25,10 @@ RUN  chmod 755 /usr/local/bin/run_tests.sh
 
 RUN useradd ${USER_NAME} -u 8737 --create-home --user-group
 
-USER 8737
-
 RUN mkdir ${WORKDIR} \
     && chmod 777 ${WORKDIR}
 
+USER ${USER_NAME}
 WORKDIR ${WORKDIR}
 
 CMD ["python"]
