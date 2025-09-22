@@ -1,10 +1,10 @@
 FROM python:3.11.7-slim-bullseye
 
-LABEL software="python"
-LABEL software.version="3.11.7"
-LABEL about.summary="Python is a programming language that lets you work quickly and integrate systems more effectively."
-LABEL about.home="https://www.python.org/"
-LABEL about.documentation="https://docs.python.org/3/"
+ARG PYTHON_WF_HELPER_VERSION="3.11.7_0.1.0"
+
+LABEL software="Python Ensreg Workflow Helper"
+LABEL software.version="${PYTHON_WF_HELPER_VERSION}"
+LABEL about.summary="Python Ensembl Regulation workflows helper."
 LABEL about.license="https://docs.python.org/3/license.html#psf-license"
 
 LABEL maintainer="David Urbina-Gómez"
