@@ -3,4 +3,4 @@
 set -uef
 set -o xtrace
 
-NGmerge --help
+which NGmerge
