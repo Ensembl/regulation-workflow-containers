@@ -1,0 +1,43 @@
+.python-wf-helper-3.11.7_0.1_0:
+  variables:
+    IMAGE_NAME: python-wf-helper
+    IMAGE_VERSION: 3.11.7_0.1_0
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/python-wf-helper/3.11.7_0.1_0.yml
+        - dockerfiles/python-wf-helper/3.11.7_0.1_0/*
+        - .gitlab-ci.yml
+
+test-python-wf-helper-3.11.7_0.1_0:
+  extends:
+    - .test
+    - .python-wf-helper-3.11.7_0.1_0
+
+build-python-wf-helper-3.11.7_0.1_0:
+  extends:
+    - .build
+    - .python-wf-helper-3.11.7_0.1_0
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  needs: [ "test-python-wf-helper-3.11.7_0.1_0" ]
+
+
+scan-python-wf-helper-3.11.7_0.1_0:
+  extends:
+    - .container_scanning
+    - .python-wf-helper-3.11.7_0.1_0
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-python-wf-helper-3.11.7_0.1_0" ]
+
+scan-python-wf-helper-latest:
+  extends:
+    - .container_scanning
+    - .python-wf-helper-3.11.7_0.1_0
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-python-wf-helper-3.11.7_0.1_0" ]
