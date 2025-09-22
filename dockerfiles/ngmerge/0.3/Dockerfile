@@ -54,5 +54,3 @@ RUN chmod 755 /usr/local/bin/run_tests.sh
 
 USER ${USER_NAME}
 WORKDIR ${WORKDIR}
-
-CMD ["NGmerge", "--help"]
