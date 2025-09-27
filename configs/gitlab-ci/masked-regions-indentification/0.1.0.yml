@@ -1,0 +1,43 @@
+.masked-regions-identification-0.1.0:
+  variables:
+    IMAGE_NAME: masked-regions-identification
+    IMAGE_VERSION: 0.1.0
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/masked-regions-identification/0.1.0.yml
+        - dockerfiles/masked-regions-identification/0.1.0/*
+        - .gitlab-ci.yml
+
+test-masked-regions-identification-0.1.0:
+  extends:
+    - .test
+    - .masked-regions-identification-0.1.0
+
+build-masked-regions-identification-0.1.0:
+  extends:
+    - .build
+    - .masked-regions-identification-0.1.0
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  needs: [ "test-masked-regions-identification-0.1.0" ]
+
+
+scan-masked-regions-identification-0.1.0:
+  extends:
+    - .container_scanning
+    - .masked-regions-identification-0.1.0
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-masked-regions-identification-0.1.0" ]
+
+scan-masked-regions-identification-latest:
+  extends:
+    - .container_scanning
+    - .masked-regions-identification-0.1.0
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "build-masked-regions-identification-0.1.0" ]
