@@ -1,6 +1,6 @@
 FROM python:3.10.12-slim-bullseye
 
-ARG PYTHON_WF_HELPER_VERSION="0.1.0"
+ARG PYTHON_WF_HELPER_VERSION="3.10.12_0.1.0"
 
 LABEL software="Ensreg Gapped Peaks generation"
 LABEL software.version="${PYTHON_WF_HELPER_VERSION}"

@@ -1,43 +1,43 @@
-.ensreg-gapped-peaks-0.1.0:
+.ensreg-gapped-peaks-3.10.12_0.1.0:
   variables:
     IMAGE_NAME: ensreg-gapped-peaks
-    IMAGE_VERSION: 0.1.0
+    IMAGE_VERSION: 3.10.12_0.1.0
     DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
   # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
   rules:
     - changes:
-        - configs/gitlab-ci/ensreg-gapped-peaks/0.1.0.yml
-        - dockerfiles/ensreg-gapped-peaks/0.1.0/*
+        - configs/gitlab-ci/ensreg-gapped-peaks/3.10.12_0.1.0.yml
+        - dockerfiles/ensreg-gapped-peaks/3.10.12_0.1.0/*
         - .gitlab-ci.yml
 
-test-ensreg-gapped-peaks-0.1.0:
+test-ensreg-gapped-peaks-3.10.12_0.1.0:
   extends:
     - .test
-    - .ensreg-gapped-peaks-0.1.0
+    - .ensreg-gapped-peaks-3.10.12_0.1.0
 
-build-ensreg-gapped-peaks-0.1.0:
+build-ensreg-gapped-peaks-3.10.12_0.1.0:
   extends:
     - .build
-    - .ensreg-gapped-peaks-0.1.0
+    - .ensreg-gapped-peaks-3.10.12_0.1.0
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-ensreg-gapped-peaks-0.1.0" ]
+  needs: [ "test-ensreg-gapped-peaks-3.10.12_0.1.0" ]
 
 
-scan-ensreg-gapped-peaks-0.1.0:
+scan-ensreg-gapped-peaks-3.10.12_0.1.0:
   extends:
     - .container_scanning
-    - .ensreg-gapped-peaks-0.1.0
+    - .ensreg-gapped-peaks-3.10.12_0.1.0
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-ensreg-gapped-peaks-0.1.0" ]
+  needs: [ "build-ensreg-gapped-peaks-3.10.12_0.1.0" ]
 
 scan-ensreg-gapped-peaks-latest:
   extends:
     - .container_scanning
-    - .ensreg-gapped-peaks-0.1.0
+    - .ensreg-gapped-peaks-3.10.12_0.1.0
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-ensreg-gapped-peaks-0.1.0" ]
+  needs: [ "build-ensreg-gapped-peaks-3.10.12_0.1.0" ]
