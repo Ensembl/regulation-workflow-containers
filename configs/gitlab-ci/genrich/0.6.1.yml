@@ -14,6 +14,7 @@ test-genrich-0.6.1:
   extends:
     - .test
     - .genrich-0.6.1
+  needs: [ "build-genrich-0.6.1" ]
 
 build-genrich-0.6.1:
   extends:
@@ -21,7 +22,7 @@ build-genrich-0.6.1:
     - .genrich-0.6.1
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-genrich-0.6.1" ]
+  
 
 scan-genrich-0.6.1:
   extends:
@@ -30,7 +31,7 @@ scan-genrich-0.6.1:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-genrich-0.6.1" ]
+  needs: [ "test-genrich-0.6.1" ]
 
 scan-genrich-latest:
   extends:
@@ -39,4 +40,4 @@ scan-genrich-latest:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-genrich-0.6.1" ]
+  needs: [ "test-genrich-0.6.1" ]

@@ -14,6 +14,7 @@ test-bedsort-v369:
   extends:
     - .test
     - .bedsort-v369
+  needs: [ "build-bedsort-v369" ]
 
 build-bedsort-v369:
   extends:
@@ -21,7 +22,7 @@ build-bedsort-v369:
     - .bedsort-v369
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-bedsort-v369" ]
+  
 
 
 scan-bedsort-v369:
@@ -31,7 +32,7 @@ scan-bedsort-v369:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-bedsort-v369" ]
+  needs: [ "test-bedsort-v369" ]
 
 scan-bedsort-latest:
   extends:
@@ -40,4 +41,4 @@ scan-bedsort-latest:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-bedsort-v369" ]
+  needs: [ "test-bedsort-v369" ]

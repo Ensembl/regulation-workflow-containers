@@ -14,6 +14,7 @@ test-fastqc-0.11.9:
   extends:
     - .test
     - .fastqc-0.11.9
+  needs: [ "build-fastqc-0.11.9" ]
 
 build-fastqc-0.11.9:
   extends:
@@ -21,7 +22,7 @@ build-fastqc-0.11.9:
     - .fastqc-0.11.9
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-fastqc-0.11.9" ]
+  
 
 
 scan-fastqc-0.11.9:
@@ -31,7 +32,7 @@ scan-fastqc-0.11.9:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-fastqc-0.11.9" ]
+  needs: [ "test-fastqc-0.11.9" ]
 
 scan-fastqc-latest:
   extends:
@@ -40,4 +41,4 @@ scan-fastqc-latest:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-fastqc-0.11.9" ]
+  needs: [ "test-fastqc-0.11.9" ]

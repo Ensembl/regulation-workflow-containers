@@ -14,6 +14,7 @@ test-multiqc-1.19:
   extends:
     - .test
     - .multiqc-1.19
+  needs: [ "build-multiqc-1.19" ]
 
 build-multiqc-1.19:
   extends:
@@ -21,7 +22,7 @@ build-multiqc-1.19:
     - .multiqc-1.19
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-multiqc-1.19" ]
+  
 
 scan-multiqc-1.19:
   extends:
@@ -30,4 +31,4 @@ scan-multiqc-1.19:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-multiqc-1.19" ]
+  needs: [ "test-multiqc-1.19" ]

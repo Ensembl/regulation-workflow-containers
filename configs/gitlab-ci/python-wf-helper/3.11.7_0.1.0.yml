@@ -14,6 +14,7 @@ test-python-wf-helper-3.11.7_0.1.0:
   extends:
     - .test
     - .python-wf-helper-3.11.7_0.1.0
+  needs: [ "build-python-wf-helper-3.11.7_0.1.0" ]
 
 build-python-wf-helper-3.11.7_0.1.0:
   extends:
@@ -21,7 +22,7 @@ build-python-wf-helper-3.11.7_0.1.0:
     - .python-wf-helper-3.11.7_0.1.0
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-python-wf-helper-3.11.7_0.1.0" ]
+  
 
 
 scan-python-wf-helper-3.11.7_0.1.0:
@@ -31,7 +32,7 @@ scan-python-wf-helper-3.11.7_0.1.0:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-python-wf-helper-3.11.7_0.1.0" ]
+  needs: [ "test-python-wf-helper-3.11.7_0.1.0" ]
 
 scan-python-wf-helper-latest:
   extends:
@@ -40,4 +41,4 @@ scan-python-wf-helper-latest:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-python-wf-helper-3.11.7_0.1.0" ]
+  needs: [ "test-python-wf-helper-3.11.7_0.1.0" ]

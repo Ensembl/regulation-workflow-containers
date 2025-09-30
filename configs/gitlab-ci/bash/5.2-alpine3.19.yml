@@ -14,6 +14,7 @@ test-bash-5.2-alpine3.19:
   extends:
     - .test
     - .bash-5.2-alpine3.19
+  needs: [ "build-bash-5.2-alpine3.19" ]
 
 build-bash-5.2-alpine3.19:
   extends:
@@ -21,7 +22,7 @@ build-bash-5.2-alpine3.19:
     - .bash-5.2-alpine3.19
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-bash-5.2-alpine3.19" ]
+  
 
 
 scan-bash-5.2-alpine3.19:
@@ -31,7 +32,7 @@ scan-bash-5.2-alpine3.19:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-bash-5.2-alpine3.19" ]
+  needs: [ "test-bash-5.2-alpine3.19" ]
 
 scan-bash-latest:
   extends:
@@ -40,4 +41,4 @@ scan-bash-latest:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-bash-5.2-alpine3.19" ]
+  needs: [ "test-bash-5.2-alpine3.19" ]

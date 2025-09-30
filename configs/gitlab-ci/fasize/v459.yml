@@ -14,6 +14,7 @@ test-fasize-v459:
   extends:
     - .test
     - .fasize-v459
+  needs: [ "build-fasize-v459" ]
 
 build-fasize-v459:
   extends:
@@ -21,7 +22,7 @@ build-fasize-v459:
     - .fasize-v459
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-fasize-v459" ]
+  
 
 
 scan-fasize-v459:
@@ -31,7 +32,7 @@ scan-fasize-v459:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-fasize-v459" ]
+  needs: [ "test-fasize-v459" ]
 
 scan-fasize-latest:
   extends:
@@ -40,4 +41,4 @@ scan-fasize-latest:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-fasize-v459" ]
+  needs: [ "test-fasize-v459" ]

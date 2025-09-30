@@ -14,6 +14,7 @@ test-moods-1.9.4.1:
   extends:
     - .test
     - .moods-1.9.4.1
+  needs: [ "build-moods-1.9.4.1" ]
 
 build-moods-1.9.4.1:
   extends:
@@ -21,7 +22,7 @@ build-moods-1.9.4.1:
     - .moods-1.9.4.1
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-moods-1.9.4.1" ]
+  
 
 
 scan-moods-1.9.4.1:
@@ -31,7 +32,7 @@ scan-moods-1.9.4.1:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-moods-1.9.4.1" ]
+  needs: [ "test-moods-1.9.4.1" ]
 
 scan-moods-latest:
   extends:
@@ -40,4 +41,4 @@ scan-moods-latest:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-moods-1.9.4.1" ]
+  needs: [ "test-moods-1.9.4.1" ]

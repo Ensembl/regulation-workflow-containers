@@ -14,6 +14,7 @@ test-bowtie2_samtools-2.4.5_1.15.1:
   extends:
     - .test
     - .bowtie2_samtools-2.4.5_1.15.1
+  needs: [ "build-bowtie2_samtools-2.4.5_1.15.1" ]
 
 build-bowtie2_samtools-2.4.5_1.15.1:
   extends:
@@ -21,7 +22,7 @@ build-bowtie2_samtools-2.4.5_1.15.1:
     - .bowtie2_samtools-2.4.5_1.15.1
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-bowtie2_samtools-2.4.5_1.15.1" ]
+  
 
 
 scan-bowtie2_samtools-2.4.5_1.15.1:
@@ -31,7 +32,7 @@ scan-bowtie2_samtools-2.4.5_1.15.1:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-bowtie2_samtools-2.4.5_1.15.1" ]
+  needs: [ "test-bowtie2_samtools-2.4.5_1.15.1" ]
 
 scan-bowtie2_samtools-latest:
   extends:
@@ -40,4 +41,4 @@ scan-bowtie2_samtools-latest:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-bowtie2_samtools-2.4.5_1.15.1" ]
+  needs: [ "test-bowtie2_samtools-2.4.5_1.15.1" ]

@@ -8,8 +8,8 @@ include:
 
 
 stages:
-  - test
   - build
+  - test
   - security-checks
 
 variables:

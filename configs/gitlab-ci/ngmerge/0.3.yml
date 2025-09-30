@@ -14,6 +14,7 @@ test-ngmerge-0.3:
   extends:
     - .test
     - .ngmerge-0.3
+  needs: [ "build-ngmerge-0.3" ]
 
 build-ngmerge-0.3:
   extends:
@@ -21,7 +22,7 @@ build-ngmerge-0.3:
     - .ngmerge-0.3
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-ngmerge-0.3" ]
+  
 
 
 scan-ngmerge-0.3:
@@ -31,7 +32,7 @@ scan-ngmerge-0.3:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-ngmerge-0.3" ]
+  needs: [ "test-ngmerge-0.3" ]
 
 scan-ngmerge-latest:
   extends:
@@ -40,4 +41,4 @@ scan-ngmerge-latest:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-ngmerge-0.3" ]
+  needs: [ "test-ngmerge-0.3" ]

@@ -14,6 +14,7 @@ test-bedtools-2.31.0:
   extends:
     - .test
     - .bedtools-2.31.0
+  needs: [ "build-bedtools-2.31.0" ]
 
 build-bedtools-2.31.0:
   extends:
@@ -21,7 +22,7 @@ build-bedtools-2.31.0:
     - .bedtools-2.31.0
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-bedtools-2.31.0" ]
+  
 
 
 scan-bedtools-2.31.0:
@@ -31,7 +32,7 @@ scan-bedtools-2.31.0:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-bedtools-2.31.0" ]
+  needs: [ "test-bedtools-2.31.0" ]
 
 scan-bedtools-latest:
   extends:
@@ -40,4 +41,4 @@ scan-bedtools-latest:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-bedtools-2.31.0" ]
+  needs: [ "test-bedtools-2.31.0" ]

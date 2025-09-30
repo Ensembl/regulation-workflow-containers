@@ -14,6 +14,7 @@ test-multiqc-1.22:
   extends:
     - .test
     - .multiqc-1.22
+  needs: [ "build-multiqc-1.22" ]
 
 build-multiqc-1.22:
   extends:
@@ -21,7 +22,7 @@ build-multiqc-1.22:
     - .multiqc-1.22
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  needs: [ "test-multiqc-1.22" ]
+  
 
 scan-multiqc-1.22:
   extends:
@@ -30,7 +31,7 @@ scan-multiqc-1.22:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-multiqc-1.22" ]
+  needs: [ "test-multiqc-1.22" ]
 
 scan-multiqc-latest:
   extends:
@@ -39,4 +40,4 @@ scan-multiqc-latest:
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "build-multiqc-1.22" ]
+  needs: [ "test-multiqc-1.22" ]
