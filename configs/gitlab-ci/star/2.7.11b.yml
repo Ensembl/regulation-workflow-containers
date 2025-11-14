@@ -1,0 +1,43 @@
+.star-2.7.11b:
+  variables:
+    IMAGE_NAME: star
+    IMAGE_VERSION: 2.7.11b
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/star/2.7.11b.yml
+        - dockerfiles/star/2.7.11b/*
+        - .gitlab-ci.yml
+
+test-star-2.7.11b:
+  extends:
+    - .test
+    - .star-2.7.11b
+  needs: [ "build-star-2.7.11b" ]
+
+build-star-2.7.11b:
+  extends:
+    - .build
+    - .star-2.7.11b
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  
+
+scan-star-2.7.11b:
+  extends:
+    - .container_scanning
+    - .star-2.7.11b
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "test-star-2.7.11b" ]
+
+scan-star-latest:
+  extends:
+    - .container_scanning
+    - .star-2.7.11b
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "test-star-2.7.11b" ]
