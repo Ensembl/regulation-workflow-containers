@@ -20,6 +20,9 @@ RUN cd source && make
 # ----------- Runtime stage -----------
 FROM bitnami/minideb:bookworm
 
+RUN install_packages \
+    libgomp1
+
 ## Add some metadata info
 LABEL software="STAR"
 LABEL software.version="2.7.11b"
