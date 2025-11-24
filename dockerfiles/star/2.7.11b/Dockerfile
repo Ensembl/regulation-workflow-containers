@@ -29,7 +29,9 @@ LABEL maintainer="Ensembl Regulation"
 LABEL maintainer.email="helpdesk@ebi.ac.uk"
 
 ## Copy the binary from the builder
-COPY --from=builder /STAR /usr/local/bin/
+COPY --from=builder /STAR/source/STAR /usr/local/bin/STAR
+RUN chmod +x /usr/local/bin/STAR
+ENV PATH="/usr/local/bin:$PATH"
 
 ## Optional: test the build
 COPY run_tests.sh /usr/local/bin/
