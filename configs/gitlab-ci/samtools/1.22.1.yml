@@ -1,0 +1,44 @@
+.samtools-1.22.1:
+  variables:
+    IMAGE_NAME: samtools
+    IMAGE_VERSION: 1.22.1
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/samtools/1.22.1.yml
+        - dockerfiles/samtools/1.22.1/*
+        - .gitlab-ci.yml
+
+test-samtools-1.22.1:
+  extends:
+    - .test
+    - .samtools-1.22.1
+  needs: [ "build-samtools-1.22.1" ]
+
+build-samtools-1.22.1:
+  extends:
+    - .build
+    - .samtools-1.22.1
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  
+
+
+scan-samtools-1.22.1:
+  extends:
+    - .container_scanning
+    - .samtools-1.22.1
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "test-samtools-1.22.1" ]
+
+scan-samtools-latest:
+  extends:
+    - .container_scanning
+    - .samtools-1.22.1
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "test-samtools-1.22.1" ]
