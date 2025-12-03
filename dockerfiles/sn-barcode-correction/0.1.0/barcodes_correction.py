@@ -1,6 +1,6 @@
 """
 snATAC-seq barcodes orientation detection and correction
-by comparing with whitelist and allowing up to 1 Hamming
+by comparing with whitelist while allowing up to 1 Hamming
 distance between observed and expected sequences
 """
 
@@ -16,11 +16,11 @@ from collections import defaultdict
 
 ## -- Arguments parser --
 def parse_args():
-    parser = argparse.ArgumentParser(description="Barcode correction for 10X snATAC-seq")
+    parser = argparse.ArgumentParser(description="Barcode correction for 10X snATAC-seq files")
     parser.add_argument("-f", "--fastq", required=True, help="Path to uncompressed FASTQ file containing the barcodes (e.g., R2)")
     parser.add_argument("-w", "--whitelist", required=True, help="Path to the 10X whitelist file")
     parser.add_argument("-o", "--out_corrected", required=True, help="Path to the output FASTQ file with corrected barcodes")
-    parser.add_argument("-u", "--out_uncorrected", required=True, help="Path to the output text file with the uncorrected barcodes")
+    parser.add_argument("-u", "--out_uncorrected", required=True, help="Path to the output text file with the unmatched barcodes")
     parser.add_argument("-t", "--offset", type=int, default=0, help="Number of bases after which the barcode start in the read")
     parser.add_argument("-p", "--processes", type=int, default=4, help="Number of processes for multiprocessing (default = 4)")
     parser.add_argument("-s", "--chunk_size", type=int, default=500000, help="Number of reads per chunk for parallel processing (default = 500000)")
