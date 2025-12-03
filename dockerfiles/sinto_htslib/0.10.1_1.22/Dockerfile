@@ -42,6 +42,9 @@ RUN git clone https://github.com/timoast/sinto.git /opt/sinto
 # Setting sinto directory
 WORKDIR /opt/sinto
 
+# hard reset to v 0.10.1 commit
+RUN git reset --hard 37b7db1
+
 # Install sinto using pip
 RUN pip3 install .
 
