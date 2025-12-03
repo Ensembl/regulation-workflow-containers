@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Download precompiled UCSC binary
 RUN wget --no-check-certificate -O /usr/local/bin/bedGraphToBigWig \
-      https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig \
+      https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64.v479/bedGraphToBigWig \
     && chmod +x /usr/local/bin/bedGraphToBigWig
 
 # Create non-root user consistent with bedToBigBed and Samtools containers
