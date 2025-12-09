@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     curl \
     bzip2 \
+    pigz \
     zlib1g-dev \
     libbz2-dev \
     liblzma-dev \
@@ -86,6 +87,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     perl \
     python3 \
     bzip2 \
+    pigz \
     zlib1g \
     libbz2-1.0 \
     liblzma5 \
