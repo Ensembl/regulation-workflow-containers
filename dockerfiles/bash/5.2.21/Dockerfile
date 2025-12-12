@@ -10,7 +10,7 @@ LABEL about.license="https://www.gnu.org/licenses/gpl-3.0.html"
 LABEL maintainer="David Urbina-Gómez"
 LABEL maintainer.email="durbina@ebi.ac.uk"
 
-RUN apk add --no-cache tar pigz jq
+RUN apk add --no-cache tar pigz jq curl
 
 RUN addgroup -g 8737 ensreg \
     && adduser -u 8737 -G ensreg -D ensreg
