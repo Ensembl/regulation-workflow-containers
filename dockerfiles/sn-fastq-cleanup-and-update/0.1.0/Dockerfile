@@ -12,17 +12,19 @@ ARG GROUP_NAME="ensreg"
 ENV HOME="/home/${USER_NAME}"
 ENV WORKDIR="${HOME}/workdir"
 
+# Create non-root user and working directory
+RUN useradd -u 8737 -m -s /bin/bash ${USER_NAME} && \
+    mkdir -p ${WORKDIR}  && \
+    chown -R ${USER_NAME}:${GROUP_NAME} ${HOME} && \
+    chmod 777 ${WORKDIR}
+
+
 COPY run_tests.sh /usr/local/bin/
 RUN  chmod 755 /usr/local/bin/run_tests.sh
 
-RUN useradd ${USER_NAME} -u 8737 --create-home --user-group
-
-RUN mkdir ${WORKDIR} \
-    && chmod 777 ${WORKDIR}
+COPY sn_fastq_filtering_update.py ${WORKDIR}
 
 USER ${USER_NAME}
 WORKDIR ${WORKDIR}
-
-COPY sn_fastq_filtering_update.py ${WORKDIR}
 
 CMD ["python"]
