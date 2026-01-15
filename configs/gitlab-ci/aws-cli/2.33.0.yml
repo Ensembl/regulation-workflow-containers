@@ -1,0 +1,35 @@
+.aws-cli-2.33.0:
+  variables:
+    IMAGE_NAME: aws-cli
+    IMAGE_VERSION: 2.33.0
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/aws-cli/2.33.0.yml
+        - dockerfiles/aws-cli/2.33.0/*
+        - .gitlab-ci.yml
+
+test-aws-cli-2.33.0:
+  extends:
+    - .test
+    - .aws-cli-2.33.0
+  needs: [ "build-aws-cli-2.33.0" ]
+
+build-aws-cli-2.33.0:
+  extends:
+    - .build
+    - .aws-cli-2.33.0
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  
+
+
+scan-aws-cli-2.33.0:
+  extends:
+    - .container_scanning
+    - .aws-cli-2.33.0
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "test-aws-cli-2.33.0" ]
