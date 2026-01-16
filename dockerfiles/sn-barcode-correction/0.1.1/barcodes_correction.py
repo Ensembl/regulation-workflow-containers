@@ -163,9 +163,9 @@ def build_barcode_counts(fastq_file, offset, rc_need):
 ###############################################    
 
 ## -- Variables initializer --
-def init_worker(whitelist_enc, enc_to_bc, bc_counts, prob_threshold, offset, rc_need, phred_offset, bc_len):
+def init_worker(whitelist_enc, enc_to_bc, bc_counts_enc, prob_threshold, offset, rc_need, phred_offset, bc_len):
     """Initialise the global variables in each parallel process"""
-    global WHITELIST_ENC, ENC2BC, BARCODE_COUNTS
+    global WHITELIST_ENC, ENC2BC, BARCODE_COUNTS, TOTAL_COUNT
     global PROB_THRESHOLD, OFFSET, RC_NEED, PHRED_OFFSET, BC_LEN
     WHITELIST_ENC = whitelist_enc
     ENC2BC = enc_to_bc
@@ -175,6 +175,8 @@ def init_worker(whitelist_enc, enc_to_bc, bc_counts, prob_threshold, offset, rc_
     RC_NEED = rc_need
     PHRED_OFFSET = phred_offset
     BC_LEN = bc_len 
+    alpha = 1.0 # for smoothing prior calculation
+    TOTAL_COUNT = sum(BARCODE_COUNTS.values()) + alpha * len(WHITELIST_ENC)  # for prior calculation
 
 ## -- Load reads chunk --
 def load_chunks(file_path, chunk_size):
@@ -199,8 +201,8 @@ def process_chunk(chunk):
 #    print(f"[PID {os.getpid()}] Starting chunk with {len(chunk)} reads.")
     corrected = []
     uncorrected = []
-    alpha = 1.0 # for smoothing prior calculation
-    total_count = sum(BARCODE_COUNTS.values()) + alpha * len(WHITELIST_ENC)  # for prior calculation
+    #alpha = 1.0 # for smoothing prior calculation
+    #total_count = sum(BARCODE_COUNTS.values()) + alpha * len(WHITELIST_ENC)  # for prior calculation
     n_exact_match = 0
     n_corrected = 0
     n_uncorrected = 0
@@ -240,7 +242,7 @@ def process_chunk(chunk):
                 posteriors = []
                 priors = []
                 for enc, mismatch_idx in candidates:
-                    prior = (BARCODE_COUNTS.get(enc, 0) + alpha) / total_count # Laplace smoothing
+                    prior = (BARCODE_COUNTS.get(enc, 0) + alpha) / TOTAL_COUNT # total_count # Laplace smoothing
                     q_prob = phred_prob(bc_qual[mismatch_idx]) 
                     wbc = ENC2BC[enc]
                     posteriors.append((wbc, prior * q_prob))
