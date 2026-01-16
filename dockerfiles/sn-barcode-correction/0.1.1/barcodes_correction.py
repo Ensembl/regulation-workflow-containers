@@ -201,7 +201,7 @@ def process_chunk(chunk):
 #    print(f"[PID {os.getpid()}] Starting chunk with {len(chunk)} reads.")
     corrected = []
     uncorrected = []
-    #alpha = 1.0 # for smoothing prior calculation
+    alpha = 1.0 # for smoothing prior calculation
     #total_count = sum(BARCODE_COUNTS.values()) + alpha * len(WHITELIST_ENC)  # for prior calculation
     n_exact_match = 0
     n_corrected = 0
