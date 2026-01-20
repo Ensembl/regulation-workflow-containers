@@ -47,6 +47,7 @@ WORKDIR ${WORKDIR}
 
 # Config cache for prefetch
 RUN mkdir -p $HOME/.ncbi $HOME/cache
+RUN chown -R ${USER_NAME}:${GROUP_NAME} $HOME/cache
 
 RUN vdb-config --set /repository/user/cache-enabled=true
 RUN vdb-config --set /repository/user/main/public/root=$HOME/cache
