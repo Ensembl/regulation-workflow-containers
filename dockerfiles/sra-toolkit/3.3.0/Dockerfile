@@ -45,6 +45,12 @@ RUN useradd -u 8737 -m -s /bin/bash ${USER_NAME} && \
 USER ${USER_NAME}
 WORKDIR ${WORKDIR}
 
+# Config cache for prefetch
+RUN mkdir -p $HOME/.ncbi $HOME/cache
+
+RUN vdb-config --set /repository/user/cache-enabled=true
+RUN vdb-config --set /repository/user/main/public/root=$HOME/cache
+
 # Copy test script
 COPY --chown=${USER_NAME}:${GROUP_NAME} run_tests.sh /usr/local/bin/run_tests.sh
 RUN chmod 755 /usr/local/bin/run_tests.sh
