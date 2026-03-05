@@ -33,10 +33,7 @@ RUN apt-get update && apt-get install -y \
 # Install required python libraries
 RUN python3 -m pip install --upgrade pip
 
-RUN pip3 install --no-cache-dir \
-    "setuptools>=65.0" \
-    "wheel>=0.38" \
-    "umi_tools>=1.1.4"
+RUN pip3 install --no-cache-dir umi_tools
 
 # Clone sinto repository
 RUN git clone https://github.com/timoast/sinto.git /opt/sinto
