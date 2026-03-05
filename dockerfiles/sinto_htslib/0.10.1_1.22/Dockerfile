@@ -36,7 +36,7 @@ RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install --upgrade pip setuptools wheel
 
 # Install umi_tools first with --no-build-isolation to bypass broken ez_setup.py
-RUN pip3 install --no-cache-dir --no-build-isolation umi_tools
+RUN pip3 install --no-cache-dir git+https://github.com/CGATOxford/UMI-tools.git@master
 
 # Clone sinto repository
 RUN git clone https://github.com/timoast/sinto.git /opt/sinto
