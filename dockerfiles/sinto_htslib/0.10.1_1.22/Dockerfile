@@ -94,6 +94,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     liblzma5 \
     libncurses6 \
     libcurl4 \
+    python3-setuptools \
     && rm -rf /var/lib/apt/lists/*
 
 ARG USER_NAME="ensreg"
