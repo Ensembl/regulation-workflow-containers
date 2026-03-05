@@ -19,11 +19,15 @@ def parse_args():
     parser.add_argument('--out_r2', required=True, help='Filtered R2 FASTQ file (.gz)')
     return parser.parse_args()
 
+## -- Handle compressed and decompressed files --
+def open_file(path, mode='rt'):
+    return gzip.open(path, mode) if path.endswith('.gz') else open(path, mode)
+    
 ## -- Load uncorrected reads --
 def load_excluded_reads(unmatched_file):
     """Load read names to exclude from unmatched_barcodes.txt"""
     excluded_reads = set() 
-    with open(unmatched_file, 'r') as f:
+    with open_file(unmatched_file, 'rt') as f:
         for line in f:
             line = line.strip()
             if line.startswith('@'):
@@ -60,8 +64,8 @@ if __name__ == "__main__":
     skipped_bc = 0
 
     # processing 
-    with gzip.open(r1_in, "rt") as r1_f, gzip.open(r2_in, "rt") as r2_f, gzip.open(bc_in, "rt") as bc_f, \
-        gzip.open(r1_out, "wt") as out1, gzip.open(r2_out, "wt") as out2:
+    with open_file(r1_in, "rt") as r1_f, open_file(r2_in, "rt") as r2_f, open_file(bc_in, "rt") as bc_f, \
+        open_file(r1_out, "wt") as out1, open_file(r2_out, "wt") as out2:
         for r1_rec, r2_rec, bc_rec in zip(fastq_iter(r1_f), fastq_iter(r2_f), fastq_iter(bc_f)):
             name = bc_rec[0][1:].split()[0]
             if name in invalid_bc:
