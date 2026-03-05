@@ -30,12 +30,10 @@ RUN apt-get update && apt-get install -y \
 
 # Sinto installation
 
-COPY requirements.txt /tmp/requirements.txt
-
 # Install required python libraries
 RUN python3 -m pip install --upgrade pip
 
-RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
+RUN python3 -m pip install --upgrade pip setuptools wheel
 
 # Clone sinto repository
 RUN git clone https://github.com/timoast/sinto.git /opt/sinto
