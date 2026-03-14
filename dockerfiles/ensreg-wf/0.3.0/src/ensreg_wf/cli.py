@@ -153,7 +153,7 @@ class ENABulkRNASeqTask(BaseModel):
         """Serialize to Argo Wfs parameter dict."""
         return {
             "runs": self.runs.model_dump(),
-            "run_mode": str(self.run_mode),
+            "run_mode": str(self.run_mode.value),
             "star_index_s3_key": self.star_index.path,
             "reference_file_size": str(self.reference_file_size),
             "threads": str(self.threads),
