@@ -50,6 +50,12 @@ class ReadFileParameter(BaseModel):
     md5: str
 
 
+class RunMode(str, Enum):
+    single_cell = "single-cell"
+    paired_end = "paired-end"
+    single_end = "single-cell"
+
+
 class ScRNASeqTask(BaseModel):
     assembly_name: str = Field(
         ...,
@@ -128,7 +134,7 @@ class ENARuns(RootModel[list[ENAPairedRun | ENASingleRun]]):
 
 class ENABulkRNASeqTask(BaseModel):
     runs: ENARuns
-    paired: bool = True
+    run_mode: RunMode
     star_index: StarIndexParameter = Field(
         ...,
         description="STAR index reference",
@@ -147,7 +153,7 @@ class ENABulkRNASeqTask(BaseModel):
         """Serialize to Argo Wfs parameter dict."""
         return {
             "runs": self.runs.model_dump(),
-            "paired": str(self.paired).lower(),  # "true" / "false"
+            "run_mode": str(self.run_mode),
             "star_index_s3_key": self.star_index.path,
             "reference_file_size": str(self.reference_file_size),
             "threads": str(self.threads),
@@ -266,12 +272,12 @@ class BulkRNASeqSampleSheet(RootModel[list[ENABulkRNASeqSample]]):
                     f"Mixed paired/single-end runs in experiment "
                     f"{experiment_accession!r}"
                 )
-            paired = run_types == {ENAPairedRun}
+            run_mode = RunMode.paired_end if run_types == {ENAPairedRun} else RunMode.single_end
 
             tasks.append(
                 ENABulkRNASeqTask(
                     runs=ENARuns(runs),
-                    paired=paired,
+                    run_mode=run_mode,
                     star_index=StarIndexParameter(
                         path=rep.star_index_path,
                         size=rep.star_index_size,
