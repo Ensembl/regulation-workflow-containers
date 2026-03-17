@@ -159,6 +159,10 @@ class ENAScATACSeqTask(BaseModel):
         description="Output file prefix (S3 path)",
     )
 
+    def total_file_size(self) -> int:
+        """Calculate total bytes of files to be processed."""
+        return sum(run.fastq_bytes for run in self.runs)
+
     def to_wf_parameters(self) -> dict[str, str]:
         """Serialize to Argo Wfs parameter dict."""
         # TODO: Simplify names, need to update wf first
@@ -166,7 +170,9 @@ class ENAScATACSeqTask(BaseModel):
         return {
             "experiment_accession": self.experiment_accession,
             "experiment_runs_info": {"runs": self.runs.model_dump()},
+            "total_files_size": self.total_file_size(),
             "run_mode": str(self.run_mode.value),
+            "inclusion_list_file_key": self.inclusion_list,
             "bowtie2_index_key": self.bowtie2_index.path,
             "bowtie2_index_basename": "genome",
             "s3_output_key_prefix": self.s3_output_key_prefix,

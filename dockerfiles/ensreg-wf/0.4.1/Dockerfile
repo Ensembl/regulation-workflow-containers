@@ -35,7 +35,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 FROM debian:trixie
 
 LABEL software="ensreg-wf"
-LABEL software.version="0.4.0"
+LABEL software.version="0.4.1"
 
 ARG USER_NAME="ensreg"
 ARG GROUP_NAME="ensreg"
