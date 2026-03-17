@@ -43,6 +43,9 @@ class StarIndexParameter(BaseModel):
     path: str
     size: ByteSize
 
+class Bowtie2IndexParameter(BaseModel):
+    path: str
+    size: ByteSize = Field(..., description="Size of the Bowtie2 index in bytes")
 
 class ReadFileParameter(BaseModel):
     url: str
@@ -132,6 +135,143 @@ class ENARuns(RootModel[list[ENAPairedRun | ENASingleRun]]):
     """Collection of bulk RNA-seq tasks from a sample sheet"""
     ...
 
+class ENARunWithoutPath(BaseModel):
+    accession: ENARunAccession
+    fastq_bytes: ByteSize
+
+class ENARunsWithoutPaths(RootModel[list[ENARunWithoutPath]]):
+    """Collection of runs without file paths, used for task grouping"""
+    ...
+
+class ENAScATACSeqTask(BaseModel):
+    experiment_accession: ENAExperimentAccession
+    runs: ENARunsWithoutPaths
+    run_mode: RunMode = Field(
+        default=RunMode.single_cell,
+        description="Run mode for scATAC-seq (default: single-cell)",
+    )
+    bowtie2_index: Bowtie2IndexParameter = Field(
+        ...,
+        description="Bowtie2 index reference")
+
+    s3_output_key_prefix: str = Field(
+        ...,
+        description="Output file prefix (S3 path)",
+    )
+
+    def to_wf_parameters(self) -> dict[str, str]:
+        """Serialize to Argo Wfs parameter dict."""
+        # TODO: Simplify names, need to update wf first
+
+        return {
+            "experiment_accession": self.experiment_accession,
+            "experiment_runs_info": {"runs": self.runs.model_dump()},
+            "run_mode": str(self.run_mode.value),
+            "bowtie2_index_key": self.bowtie2_index.path,
+            "bowtie2_index_basename": "genome",
+            "s3_output_key_prefix": self.s3_output_key_prefix,
+        }
+
+
+class ENAScATACSeqSample(BaseModel):
+    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+
+    assembly_name: str = Field(..., alias="assembly.name", description=(
+        "Genome assembly"))
+
+    bowtie2_index_path: str = Field(..., alias="bowtie2_index.path")
+    bowtie2_index_size: ByteSize = Field(..., alias="bowtie2_index.size")
+
+    inclusion_list: str = Field(..., description=(
+        "Path to barcode inclusion list"))
+
+    experiment_accession: ENAExperimentAccession
+    run_accession: ENARunAccession
+
+    run_fastq_bytes: int = Field(..., alias="fastq_bytes")
+
+    output_prefix: str = Field(..., description="Output file prefix (S3 path)")
+
+
+class ENAScATACSeqSampleSheet(RootModel[list[ENAScATACSeqSample]]):
+    """Sample sheet for ENA scATAC-seq data."""
+
+    def __len__(self) -> int:
+        return len(self.root)
+
+    def __iter__(self):
+        return iter(self.root)
+
+    def __getitem__(self, index: int) -> ENAScATACSeqSample:
+        return self.root[index]
+
+    @classmethod
+    def from_csv(cls, csv_path: Path | str) -> "ENAScATACSeqSampleSheet":
+        csv_path = Path(csv_path)
+        if not csv_path.exists():
+            raise ValueError(f"CSV file not found: {csv_path}")
+
+        samples = []
+        errors: dict[int, ValidationError] = {}
+
+        try:
+            with csv_path.open(newline="") as f:
+                for row_num, row in enumerate(csv.DictReader(f), start=2):
+                    row = {k: (v if v != "" else None) for k, v in row.items()}
+                    try:
+                        samples.append(ENAScATACSeqSample.model_validate(row))
+                    except ValidationError as e:
+                        errors[row_num] = e
+        except OSError as e:
+            raise ValueError(f"Failed to read CSV '{csv_path}': {e}") from e
+
+        if errors:
+            error_summary = "\n\n".join(
+                f"Row {row_num}:\n{error}" for row_num, error in errors.items()
+            )
+            raise ValueError(
+                f"Sample sheet validation failed:\n\n{error_summary}"
+            )
+
+        return cls(samples)
+
+    def to_sc_atac_seq_tasks(self) -> list[ENAScATACSeqTask]:
+        groups: dict[str, list[ENAScATACSeqSample]] = defaultdict(list)
+        for sample in self:
+            groups[sample.experiment_accession].append(sample)
+
+        tasks = []
+        for experiment_accession, samples in groups.items():
+            rep = samples[0]
+
+            runs = ENARunsWithoutPaths([
+                ENARunWithoutPath(
+                    accession=sample.run_accession,
+                    fastq_bytes=sample.run_fastq_bytes,
+                )
+                for sample in samples
+            ])
+
+            tasks.append(
+                ENAScATACSeqTask(
+                    experiment_accession=rep.experiment_accession,
+                    runs=runs,
+                    run_mode=RunMode.single_cell,
+                    bowtie2_index=Bowtie2IndexParameter(
+                        path=rep.bowtie2_index_path,
+                        size=rep.bowtie2_index_size,
+                    ),
+                    s3_output_key_prefix=rep.output_prefix,
+                )
+            )
+
+        return tasks
+
+    def to_json(self, path: Path | str) -> None:
+        tasks = self.to_sc_atac_seq_tasks()
+        json_data = [t.to_wf_parameters() for t in tasks]
+        Path(path).write_text(json.dumps(json_data, indent=4))
+
 class ENABulkRNASeqTask(BaseModel):
     runs: ENARuns
     run_mode: RunMode
@@ -139,7 +279,6 @@ class ENABulkRNASeqTask(BaseModel):
         ...,
         description="STAR index reference",
     )
-    reference_file_size: int
     s3_output_key_prefix: str = Field(
         ...,
         description="Output file prefix (S3 path)",
@@ -155,7 +294,7 @@ class ENABulkRNASeqTask(BaseModel):
             "runs": self.runs.model_dump(),
             "run_mode": str(self.run_mode.value),
             "star_index_s3_key": self.star_index.path,
-            "reference_file_size": str(self.reference_file_size),
+            "reference_file_size": str(self.star_index.size),
             "threads": str(self.threads),
             "s3_output_key_prefix": self.s3_output_key_prefix,
         }
@@ -282,7 +421,6 @@ class BulkRNASeqSampleSheet(RootModel[list[ENABulkRNASeqSample]]):
                         path=rep.star_index_path,
                         size=rep.star_index_size,
                     ),
-                    reference_file_size=rep.star_index_size,
                     s3_output_key_prefix=rep.output_prefix,
                     threads=rep.threads,
                 )
@@ -381,8 +519,13 @@ app = typer.Typer()
 
 
 class SampleSheetType(str, Enum):
+    SCATAC_SEQ = "sc-atac-seq"
     SCRNA_SEQ = "sc-rna-seq"
     BULK_RNA_SEQ = "bulk-rna-seq"
+
+
+def _parse_scatac_seq_sample_sheet(sample_sheet: Path) -> ENAScATACSeqSampleSheet:
+    return ENAScATACSeqSampleSheet.from_csv(sample_sheet)
 
 
 def _parse_scrna_seq_sample_sheet(sample_sheet: Path) -> ScRNASeqSampleSheet:
@@ -409,6 +552,8 @@ def parse_sample_sheet(
     logfire.info(f"Parsing sample sheet CSV: {sample_sheet_file}")
 
     match sample_sheet_type:
+        case SampleSheetType.SCATAC_SEQ:
+            sample_sheet = _parse_scatac_seq_sample_sheet(sample_sheet_file)
         case SampleSheetType.SCRNA_SEQ:
             sample_sheet = _parse_scrna_seq_sample_sheet(sample_sheet_file)
         case SampleSheetType.BULK_RNA_SEQ:
