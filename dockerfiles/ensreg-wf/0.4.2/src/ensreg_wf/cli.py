@@ -143,12 +143,22 @@ class ENARunsWithoutPaths(RootModel[list[ENARunWithoutPath]]):
     """Collection of runs without file paths, used for task grouping"""
     ...
 
+    def __iter__(self):
+        return iter(self.root)
+
+    def __len__(self):
+        return len(self.root)
+
 class ENAScATACSeqTask(BaseModel):
     experiment_accession: ENAExperimentAccession
     runs: ENARunsWithoutPaths
     run_mode: RunMode = Field(
         default=RunMode.single_cell,
         description="Run mode for scATAC-seq (default: single-cell)",
+    )
+    inclusion_list: str = Field(
+        ...,
+        description="Path to inclusion list file",
     )
     bowtie2_index: Bowtie2IndexParameter = Field(
         ...,
@@ -263,6 +273,7 @@ class ENAScATACSeqSampleSheet(RootModel[list[ENAScATACSeqSample]]):
                     experiment_accession=rep.experiment_accession,
                     runs=runs,
                     run_mode=RunMode.single_cell,
+                    inclusion_list=rep.inclusion_list,
                     bowtie2_index=Bowtie2IndexParameter(
                         path=rep.bowtie2_index_path,
                         size=rep.bowtie2_index_size,
