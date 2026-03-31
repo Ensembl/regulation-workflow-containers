@@ -1,0 +1,44 @@
+.sn-barcode-preprocessing-0.1.1:
+  variables:
+    IMAGE_NAME: sn-barcode-preprocessing
+    IMAGE_VERSION: 0.1.1
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/sn-barcode-preprocessing/0.1.1.yml
+        - dockerfiles/sn-barcode-preprocessing/0.1.1/*
+        - .gitlab-ci.yml
+
+test-sn-barcode-preprocessing-0.1.1:
+  extends:
+    - .test
+    - .sn-barcode-preprocessing-0.1.1
+  needs: [ "build-sn-barcode-preprocessing-0.1.1" ]
+
+build-sn-barcode-preprocessing-0.1.1:
+  extends:
+    - .build
+    - .sn-barcode-preprocessing-0.1.1
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  
+
+
+scan-sn-barcode-preprocessing-0.1.1:
+  extends:
+    - .container_scanning
+    - .sn-barcode-preprocessing-0.1.1
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "test-sn-barcode-preprocessing-0.1.1" ]
+
+scan-sn-barcode-preprocessing-latest:
+  extends:
+    - .container_scanning
+    - .sn-barcode-preprocessing-0.1.1
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "test-sn-barcode-preprocessing-0.1.1" ]
