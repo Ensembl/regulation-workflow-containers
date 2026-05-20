@@ -8,7 +8,7 @@ import logfire
 from typing import Annotated
 
 import typer
-import polars as pl
+#import polars as pl
 
 from pydantic import (
     BaseModel,
@@ -56,7 +56,7 @@ class ReadFileParameter(BaseModel):
 class RunMode(str, Enum):
     single_cell = "single-cell"
     paired_end = "paired-end"
-    single_end = "single-cell"
+    single_end = "single-end"
 
 
 class ScRNASeqTask(BaseModel):
@@ -290,6 +290,11 @@ class ENAScATACSeqSampleSheet(RootModel[list[ENAScATACSeqSample]]):
         Path(path).write_text(json.dumps(json_data, indent=4))
 
 class ENABulkRNASeqTask(BaseModel):
+    experiment_accession: ENAExperimentAccession
+    gene_annotation: GeneAnnotationParameter = Field(
+        ...,
+        description="Gene annotation information",
+    )
     runs: ENARuns
     run_mode: RunMode
     star_index: StarIndexParameter = Field(
@@ -314,6 +319,9 @@ class ENABulkRNASeqTask(BaseModel):
             "reference_file_size": str(self.star_index.size),
             "threads": str(self.threads),
             "s3_output_key_prefix": self.s3_output_key_prefix,
+            "experiment_accession": self.experiment_accession,
+            "gene_annotation_provider": self.gene_annotation.provider,
+            "gene_annotation_version": self.gene_annotation.version,
         }
 
 
@@ -440,6 +448,11 @@ class BulkRNASeqSampleSheet(RootModel[list[ENABulkRNASeqSample]]):
                     ),
                     s3_output_key_prefix=rep.output_prefix,
                     threads=rep.threads,
+                    experiment_accession=rep.experiment_accession,
+                    gene_annotation=GeneAnnotationParameter(
+                        provider=rep.gene_annotation_provider,
+                        version=rep.gene_annotation_version,
+                    ),
                 )
             )
 
