@@ -1,0 +1,44 @@
+.sinto_htslib-0.10.1_1.22:
+  variables:
+    IMAGE_NAME: sinto_htslib
+    IMAGE_VERSION: 0.10.1_1.22
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/sinto_htslib/0.10.1_1.22.yml
+        - dockerfiles/sinto_htslib/0.10.1_1.22/*
+        - .gitlab-ci.yml
+
+test-sinto_htslib-0.10.1_1.22:
+  extends:
+    - .test
+    - .sinto_htslib-0.10.1_1.22
+  needs: [ "build-sinto_htslib-0.10.1_1.22" ]
+
+build-sinto_htslib-0.10.1_1.22:
+  extends:
+    - .build
+    - .sinto_htslib-0.10.1_1.22
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+  
+
+
+scan-sinto_htslib-0.10.1_1.22:
+  extends:
+    - .container_scanning
+    - .sinto_htslib-0.10.1_1.22
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "test-sinto_htslib-0.10.1_1.22" ]
+
+scan-sinto_htslib-latest:
+  extends:
+    - .container_scanning
+    - .sinto_htslib-0.10.1_1.22
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "test-sinto_htslib-0.10.1_1.22" ]
