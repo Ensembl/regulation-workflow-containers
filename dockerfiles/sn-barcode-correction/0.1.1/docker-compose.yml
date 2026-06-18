@@ -1,5 +1,0 @@
-services:
-  sut:
-    build: .
-    command: run_tests.sh
-    platform: linux/x86_64
