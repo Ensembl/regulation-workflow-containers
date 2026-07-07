@@ -874,19 +874,51 @@ app = typer.Typer()
 
 class SampleSheetType(str, Enum):
     SCATAC_SEQ = "sc-atac-seq"
-    ENCODE_SCATAC_SEQ = "encode-sc-atac-seq"
     SCRNA_SEQ = "sc-rna-seq"
     BULK_RNA_SEQ = "bulk-rna-seq"
 
 
-def _parse_scatac_seq_sample_sheet(sample_sheet: Path) -> ENAScATACSeqSampleSheet:
-    return ENAScATACSeqSampleSheet.from_csv(sample_sheet)
+ENCODE_SCATAC_SEQ_MARKER_COLUMNS = frozenset(
+    {"file.accession", "file.output_type", "file.url"}
+)
+ENA_SCATAC_SEQ_MARKER_COLUMNS = frozenset({"run_accession"})
 
 
-def _parse_encode_scatac_seq_sample_sheet(
-    sample_sheet: Path
-    ) -> ENCODEScATACSeqSampleSheet:
-    return ENCODEScATACSeqSampleSheet.from_csv(sample_sheet)
+def _read_csv_headers(sample_sheet: Path) -> set[str]:
+    if not sample_sheet.exists():
+        raise ValueError(f"CSV file not found: {sample_sheet}")
+
+    try:
+        with sample_sheet.open(newline="") as f:
+            return set(csv.DictReader(f).fieldnames or [])
+    except OSError as e:
+        raise ValueError(f"Failed to read CSV '{sample_sheet}': {e}") from e
+
+
+def _parse_scatac_seq_sample_sheet(
+    sample_sheet: Path,
+) -> ENAScATACSeqSampleSheet | ENCODEScATACSeqSampleSheet:
+    headers = _read_csv_headers(sample_sheet)
+    is_encode = ENCODE_SCATAC_SEQ_MARKER_COLUMNS <= headers
+    is_ena = ENA_SCATAC_SEQ_MARKER_COLUMNS <= headers
+
+    if is_encode and is_ena:
+        raise ValueError(
+            "Ambiguous sc-atac-seq sample sheet: contains both ENCODE and "
+            "ENA/SRA marker columns"
+        )
+
+    if is_encode:
+        return ENCODEScATACSeqSampleSheet.from_csv(sample_sheet)
+
+    if is_ena:
+        return ENAScATACSeqSampleSheet.from_csv(sample_sheet)
+
+    raise ValueError(
+        "Could not determine sc-atac-seq sample sheet source. Expected ENCODE "
+        "columns like 'file.accession', 'file.output_type', 'file.url' or "
+        "ENA/SRA columns like 'run_accession', 'fastq_bytes'."
+    )
 
 
 def _parse_scrna_seq_sample_sheet(sample_sheet: Path) -> ScRNASeqSampleSheet:
@@ -915,10 +947,6 @@ def parse_sample_sheet(
     match sample_sheet_type:
         case SampleSheetType.SCATAC_SEQ:
             sample_sheet = _parse_scatac_seq_sample_sheet(sample_sheet_file)
-        case SampleSheetType.ENCODE_SCATAC_SEQ:
-            sample_sheet = _parse_encode_scatac_seq_sample_sheet(
-                sample_sheet_file
-            )
         case SampleSheetType.SCRNA_SEQ:
             sample_sheet = _parse_scrna_seq_sample_sheet(sample_sheet_file)
         case SampleSheetType.BULK_RNA_SEQ:
