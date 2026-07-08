@@ -308,11 +308,9 @@ class ENCODEFileOutputType(str, Enum):
 class ENCODEScATACRun(BaseModel):
     accession: ENCODERunAccession
     read1_reads_url: str
-    read1_file_size: int
     read2_reads_url: str
-    read2_file_size: int
     index_reads_url: str
-    index_file_size: int
+    fastq_bytes: int
 
 
 class ENCODEScATACRuns(RootModel[list[ENCODEScATACRun]]):
@@ -348,12 +346,7 @@ class ENCODEScATACSeqTask(BaseModel):
 
     def total_file_size(self) -> int:
         """Calculate total bytes of files to be processed."""
-        return sum(
-            run.index_file_size
-            + run.read1_file_size
-            + run.read2_file_size
-            for run in self.runs
-        )
+        return sum(run.fastq_bytes for run in self.runs)
 
     def to_wf_parameters(self) -> dict[str, str]:
         """Serialize to Argo Wfs parameter dict."""
@@ -552,11 +545,13 @@ class ENCODEScATACSeqSampleSheet(RootModel[list[ENCODEScATACSeqSample]]):
                 ENCODEScATACRun(
                     accession=f"{experiment_accession}-{run_index}",
                     read1_reads_url=paired_reads[1].file_url,
-                    read1_file_size=int(paired_reads[1].fastq_bytes),
                     read2_reads_url=paired_reads[2].file_url,
-                    read2_file_size=int(paired_reads[2].fastq_bytes),
                     index_reads_url=index_sample.file_url,
-                    index_file_size=int(index_sample.fastq_bytes),
+                    fastq_bytes=(
+                        int(paired_reads[1].fastq_bytes)
+                        + int(paired_reads[2].fastq_bytes)
+                        + int(index_sample.fastq_bytes)
+                    ),
                 )
             )
 
