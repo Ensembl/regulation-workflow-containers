@@ -14,7 +14,7 @@ ENV UV_PYTHON_PREFERENCE=only-managed
 #COPY .python-version ./
 
 # Install Python before the project for caching
-RUN uv python install  "$(cat .python-version)"
+RUN uv python install 3.12
 
 WORKDIR /app
 # Before the frozen sync
