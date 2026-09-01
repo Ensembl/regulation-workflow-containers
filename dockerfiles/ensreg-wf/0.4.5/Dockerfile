@@ -10,7 +10,8 @@ ENV UV_PYTHON_INSTALL_DIR=/python
 # Only use the managed Python version
 ENV UV_PYTHON_PREFERENCE=only-managed
 
-COPY .python-version ./
+## The container FROM is standardised to python 3.12 anyway, so no need for this?
+#COPY .python-version ./
 
 # Install Python before the project for caching
 RUN uv python install  "$(cat .python-version)"
