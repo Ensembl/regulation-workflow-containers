@@ -1,8 +1,10 @@
 ## Builder ##
 
-FROM bitnami/minideb:bullseye AS builder
+FROM bitnami/minideb:bookworm AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive
+# Debian 12 marks the system Python as externally managed (PEP 668)
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
 # Dependencies installation
 RUN apt-get update && apt-get install -y \
@@ -66,7 +68,7 @@ RUN wget -q ${HTSLIB_DOWNLOAD_URL} \
 
 ## Runtime ##
 
-FROM bitnami/minideb:bullseye
+FROM bitnami/minideb:bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -114,7 +116,7 @@ USER ${USER_NAME}
 WORKDIR ${WORKDIR}
 
 # Copy sinto from builder
-COPY --from=builder /usr/local/lib/python3.9/dist-packages /usr/local/lib/python3.9/dist-packages
+COPY --from=builder /usr/local/lib/python3.11/dist-packages /usr/local/lib/python3.11/dist-packages
 COPY --from=builder /usr/local/bin/sinto /usr/local/bin/sinto
 
 # Copy htslib from builder

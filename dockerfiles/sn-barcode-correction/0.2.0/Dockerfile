@@ -1,4 +1,5 @@
-FROM python:3.11.7-slim-bullseye
+FROM python:3.11-slim-bookworm
+
 
 ARG BARCODE_CORRECTION_VERSION="0.2.0"
 

@@ -1,7 +1,7 @@
 ARG NGMERGE_VERSION="0.3"
 
 # ----------- Builder stage -----------
-FROM bitnami/minideb:bullseye AS builder
+FROM bitnami/minideb:bookworm AS builder
 
 ARG NGMERGE_VERSION
 
@@ -17,7 +17,7 @@ WORKDIR /build/NGmerge
 RUN make
 
 # ----------- Final runtime image -----------
-FROM bitnami/minideb:bullseye
+FROM bitnami/minideb:bookworm
 
 ARG NGMERGE_VERSION
 

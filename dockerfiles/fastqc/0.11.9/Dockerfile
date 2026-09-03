@@ -3,7 +3,7 @@ ARG FASTQC_VERSION=0.11.9
 ARG FASTQC_URL="https://www.bioinformatics.babraham.ac.uk/projects/fastqc"
 
 # ----------- Builder stage -----------
-FROM alpine:3.12 AS builder
+FROM alpine:3.22 AS builder
 
 ARG FASTQC_VERSION
 ARG FASTQC_URL
@@ -16,7 +16,7 @@ RUN apk add --no-cache wget unzip \
  && rm /${ZIP_FILE}
 
 # ----------- Final runtime image -----------
-FROM alpine:3.12
+FROM alpine:3.22
 
 ARG FASTQC_VERSION
 
@@ -32,6 +32,9 @@ LABEL software="FastQC" \
 ENV DESTINATION="/opt" \
     FASTQC_VERSION=${FASTQC_VERSION} \
     JAVA_TOOL_OPTIONS="-Djava.awt.headless=true"
+
+# Pick up Alpine security updates released after the base image was published
+RUN apk -U upgrade --no-cache
 
 RUN apk add --no-cache \
       perl \

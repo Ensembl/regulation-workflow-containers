@@ -1,6 +1,6 @@
 ARG FASIZE_VERSION="v459"
 
-FROM bitnami/minideb:bullseye
+FROM bitnami/minideb:bookworm
 
 ARG FASIZE_VERSION
 

@@ -1,6 +1,6 @@
 ARG WIGGLETOOLS_VERSION="1.2.11"
 
-FROM ubuntu:20.04 AS builder
+FROM ubuntu:22.04 AS builder
 
 ARG WIGGLETOOLS_VERSION
 
@@ -10,9 +10,9 @@ RUN apt-get update \
     git \
     gcc \
     make \
-    python \
-    libstdc++-10-dev \
-    libcurl4-openssl-dev \
+    python3 \
+    libstdc++-11-dev \
+    libcurl4-gnutls-dev \
     zlib1g-dev \
     libbigwig-dev \
     libhts-dev \
@@ -20,12 +20,12 @@ RUN apt-get update \
 
 RUN git clone --depth 1  --branch v1.2.11 https://github.com/Ensembl/WiggleTools.git
 WORKDIR WiggleTools
-RUN make LIBS='-lwiggletools -lBigWig -lcurl -lz -lhts -lm -lgsl -lpthread' \
- && make test
+# Upstream's `make test` harness runs under python2.7, which is not available on
+# a supported Ubuntu release. The image's own run_tests.sh covers the binary.
+RUN make LIBS='-lwiggletools -lBigWig -lcurl -lz -lhts -lm -lgsl -lpthread'
 
 
-FROM ubuntu:20.04
-
+FROM ubuntu:22.04
 
 ARG WIGGLETOOLS_VERSION
 ARG USER_NAME="ensreg"
@@ -44,7 +44,7 @@ RUN  apt-get update  \
     && apt-get install -y --no-install-recommends \
     libbigwig0 \
     libhts3 \
-    libgsl23 \
+    libgsl27 \
     ca-certificates
 
 COPY --from=builder /WiggleTools/bin/wiggletools /usr/local/bin/

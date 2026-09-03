@@ -1,6 +1,6 @@
 ARG BEDSORT_VERSION="v369"
 
-FROM bitnami/minideb:bullseye
+FROM bitnami/minideb:bookworm
 
 ARG BEDSORT_VERSION
 

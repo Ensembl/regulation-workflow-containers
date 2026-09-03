@@ -1,10 +1,12 @@
-FROM python:3.10.12-slim-bullseye
+FROM python:3.11-slim-bookworm
 
-ARG PYTHON_WF_HELPER_VERSION="3.10.12_0.1.0"
 
-LABEL software="Ensreg Gapped Peaks generation"
+ARG PYTHON_WF_HELPER_VERSION="3.11_0.1.0"
+
+LABEL software="Python Ensreg Workflow Helper"
 LABEL software.version="${PYTHON_WF_HELPER_VERSION}"
-LABEL about.summary="Ensembl Regulation Gapped Peaks generation - ad hoc script."
+LABEL about.summary="Python Ensembl Regulation workflows helper."
+LABEL about.license="https://docs.python.org/3/license.html#psf-license"
 
 LABEL maintainer="David Urbina-Gómez"
 LABEL maintainer.email="durbina@ebi.ac.uk"
@@ -15,21 +17,9 @@ ARG GROUP_NAME="ensreg"
 ENV HOME="/home/${USER_NAME}"
 ENV WORKDIR="${HOME}/workdir"
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    git \
-    gcc \
-    g++ \
-    make \
-    libz-dev \
-    bedtools \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
 COPY requirements.txt /tmp/
 
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
-
 
 COPY run_tests.sh /usr/local/bin/
 RUN  chmod 755 /usr/local/bin/run_tests.sh
@@ -42,8 +32,4 @@ RUN mkdir ${WORKDIR} \
 USER ${USER_NAME}
 WORKDIR ${WORKDIR}
 
-COPY writeGappedPeaks.py ${WORKDIR}/
-
 CMD ["python"]
-
-

@@ -5,6 +5,9 @@
     DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
   # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
   rules:
+    # Scheduled pipelines rebuild every image so that security updates
+    # published since the last build are picked up.
+    - if: $CI_PIPELINE_SOURCE == "schedule"
     - changes:
         - configs/gitlab-ci/fastqc/0.11.9.yml
         - dockerfiles/fastqc/0.11.9/*

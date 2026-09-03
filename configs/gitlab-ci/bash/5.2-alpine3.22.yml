@@ -1,44 +1,47 @@
-.bash-5.2-alpine3.19:
+.bash-5.2-alpine3.22:
   variables:
     IMAGE_NAME: bash
-    IMAGE_VERSION: 5.2-alpine3.19
+    IMAGE_VERSION: 5.2-alpine3.22
     DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
   # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
   rules:
+    # Scheduled pipelines rebuild every image so that security updates
+    # published since the last build are picked up.
+    - if: $CI_PIPELINE_SOURCE == "schedule"
     - changes:
-        - configs/gitlab-ci/bash/5.2-alpine3.19.yml
-        - dockerfiles/bash/5.2-alpine3.19/*
+        - configs/gitlab-ci/bash/5.2-alpine3.22.yml
+        - dockerfiles/bash/5.2-alpine3.22/*
         - .gitlab-ci.yml
 
-test-bash-5.2-alpine3.19:
+test-bash-5.2-alpine3.22:
   extends:
     - .test
-    - .bash-5.2-alpine3.19
-  needs: [ "build-bash-5.2-alpine3.19" ]
+    - .bash-5.2-alpine3.22
+  needs: [ "build-bash-5.2-alpine3.22" ]
 
-build-bash-5.2-alpine3.19:
+build-bash-5.2-alpine3.22:
   extends:
     - .build
-    - .bash-5.2-alpine3.19
+    - .bash-5.2-alpine3.22
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
   
 
 
-scan-bash-5.2-alpine3.19:
+scan-bash-5.2-alpine3.22:
   extends:
     - .container_scanning
-    - .bash-5.2-alpine3.19
+    - .bash-5.2-alpine3.22
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "test-bash-5.2-alpine3.19" ]
+  needs: [ "test-bash-5.2-alpine3.22" ]
 
 scan-bash-latest:
   extends:
     - .container_scanning
-    - .bash-5.2-alpine3.19
+    - .bash-5.2-alpine3.22
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "test-bash-5.2-alpine3.19" ]
+  needs: [ "test-bash-5.2-alpine3.22" ]

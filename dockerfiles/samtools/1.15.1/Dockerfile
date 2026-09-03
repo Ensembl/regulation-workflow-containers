@@ -1,7 +1,7 @@
 ARG SAMTOOLS_VERSION="1.15.1"
 
 # ----------- Builder stage -----------
-FROM bitnami/minideb:bullseye AS builder
+FROM bitnami/minideb:bookworm AS builder
 
 ARG SAMTOOLS_VERSION
 
@@ -34,7 +34,7 @@ RUN wget -q ${SAMTOOLS_DOWNLOAD_URL} \
     && rm -rf samtools-${SAMTOOLS_VERSION} samtools-${SAMTOOLS_VERSION}.tar.bz2
 
 # ----------- Final runtime image -----------
-FROM bitnami/minideb:bullseye
+FROM bitnami/minideb:bookworm
 
 ARG SAMTOOLS_VERSION
 

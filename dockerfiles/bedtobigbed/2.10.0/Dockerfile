@@ -1,6 +1,6 @@
 ARG BEDTOBIGBED_VERSION="2.10.0"
 
-FROM bitnami/minideb:bullseye
+FROM bitnami/minideb:bookworm
 
 ARG BEDTOBIGBED_VERSION
 

@@ -1,35 +1,38 @@
-.bash-5.2.21:
+.bash-5.2:
   variables:
     IMAGE_NAME: bash
-    IMAGE_VERSION: 5.2.21
+    IMAGE_VERSION: 5.2
     DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
   # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
   rules:
+    # Scheduled pipelines rebuild every image so that security updates
+    # published since the last build are picked up.
+    - if: $CI_PIPELINE_SOURCE == "schedule"
     - changes:
-        - configs/gitlab-ci/bash/5.2.21.yml
-        - dockerfiles/bash/5.2.21/*
+        - configs/gitlab-ci/bash/5.2.yml
+        - dockerfiles/bash/5.2/*
         - .gitlab-ci.yml
 
-test-bash-5.2.21:
+test-bash-5.2:
   extends:
     - .test
-    - .bash-5.2.21
-  needs: [ "build-bash-5.2.21" ]
+    - .bash-5.2
+  needs: [ "build-bash-5.2" ]
 
-build-bash-5.2.21:
+build-bash-5.2:
   extends:
     - .build
-    - .bash-5.2.21
+    - .bash-5.2
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
   
 
 
-scan-bash-5.2.21:
+scan-bash-5.2:
   extends:
     - .container_scanning
-    - .bash-5.2.21
+    - .bash-5.2
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "test-bash-5.2.21" ]
+  needs: [ "test-bash-5.2" ]

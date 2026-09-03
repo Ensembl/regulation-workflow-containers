@@ -1,4 +1,20 @@
-FROM python:3.10.7-bullseye
+ARG PYTHON_VERSION="3.10"
+
+# ----------- Builder stage -----------
+FROM python:${PYTHON_VERSION}-slim-bookworm AS builder
+
+# MOODS-python ships no wheel, so it is compiled here and only the installed
+# files are copied into the runtime image, which keeps the compiler out of it.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /tmp/
+RUN pip install --no-cache-dir --prefix=/install -r /tmp/requirements.txt \
+    && rm -rf /tmp/requirements.txt
+
+# ----------- Final runtime image -----------
+FROM python:${PYTHON_VERSION}-slim-bookworm
 
 ARG MOODS_VERSION="1.9.4.1"
 ARG USER_NAME="ensreg"
@@ -17,16 +33,13 @@ LABEL software="MOODS" \
 ENV HOME="/home/${USER_NAME}"
 ENV WORKDIR="${HOME}/workdir"
 
+COPY --from=builder /install /usr/local
+
 # Create non-root user and directories
 RUN useradd -u 8737 -m -s /bin/bash ${USER_NAME} && \
     mkdir -p ${WORKDIR} /results && \
     chown -R ${USER_NAME}:${GROUP_NAME} ${HOME} && \
     chmod 777 ${WORKDIR} /results
-
-# Install Python dependencies
-COPY requirements.txt /tmp/
-RUN pip install --no-cache-dir -r /tmp/requirements.txt && \
-    rm -rf /tmp/requirements.txt
 
 USER ${USER_NAME}
 WORKDIR ${WORKDIR}
