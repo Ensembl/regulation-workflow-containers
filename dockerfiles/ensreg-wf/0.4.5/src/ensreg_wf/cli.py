@@ -30,6 +30,8 @@ from .common_models import (
 )
 from .scrna_models import ScRNASeqSampleSheet
 
+from .multiome_models import MultiomeSampleSheet
+
 # Validates the following regex is met:
 ENCODEExperimentAccession = Annotated[
     str, Field(pattern=r"^ENCSR[0-9]{3}[A-Z]{3}$")]
@@ -697,6 +699,7 @@ class SampleSheetType(str, Enum):
     PSEUDOBULK_PEAK_CALLING = "pseudobulk-peak-calling"
     SCRNA_SEQ = "sc-rna-seq"
     BULK_RNA_SEQ = "bulk-rna-seq"
+    MULTIOME = "multiome"
 
 
 ENCODE_SCATAC_SEQ_MARKER_COLUMNS = frozenset(
@@ -757,6 +760,8 @@ def _parse_bulk_rna_seq_sample_sheet(
 ) -> BulkRNASeqSampleSheet:
     return BulkRNASeqSampleSheet.from_csv(sample_sheet)
 
+def _parse_multiome_sample_sheet(sample_sheet: Path) -> MultiomeSampleSheet:
+    return MultiomeSampleSheet.from_csv(sample_sheet)
 
 @app.command("parse")
 @logfire.instrument("'parse' sample sheet: {sample_sheet=}")
@@ -782,6 +787,8 @@ def parse_sample_sheet(
             sample_sheet = _parse_scrna_seq_sample_sheet(sample_sheet_file)
         case SampleSheetType.BULK_RNA_SEQ:
             sample_sheet = _parse_bulk_rna_seq_sample_sheet(sample_sheet_file)
+        case SampleSheetType.MULTIOME:
+            sample_sheet = _parse_multiome_sample_sheet(sample_sheet_file)
         case _:
             raise ValueError(
                 f"Unsupported sample sheet type: {sample_sheet_type}"
