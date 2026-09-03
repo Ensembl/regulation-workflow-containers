@@ -48,6 +48,11 @@ class MultiomeTask(BaseModel):
         description="S3 path to ATAC inclusion barcode list (737K reference).",
     )
 
+    s3_output_key_prefix: str = Field(
+            ...,
+            description="Output file prefix (S3 path)",
+    )
+
     def to_wf_parameters(self) -> dict[str, str]:
         return {
             "total_read_files_size": str(self.total_read_files_size),
@@ -57,6 +62,8 @@ class MultiomeTask(BaseModel):
             "peaks_input_s3_key": self.peaks_input_s3_key,
             "gex_inclusion_s3_key": self.gex_inclusion_s3_key,
             "atac_inclusion_s3_key": self.atac_inclusion_s3_key,
+            "s3_output_key_prefix": self.s3_output_key_prefix,
+
         }
 
 class MultiomeSample(BaseModel):
@@ -67,6 +74,7 @@ class MultiomeSample(BaseModel):
     peaks_input_s3_key: str
     gex_inclusion_s3_key: str
     atac_inclusion_s3_key: str
+    s3_output_key_prefix: str
 
     def to_task(self) -> MultiomeTask:
         return MultiomeTask(**self.model_dump())
@@ -175,6 +183,9 @@ class MultiomeSampleSheet(
                 atac_inclusion_s3_key=(
                     sample.atac_inclusion_s3_key
                 ),
+                s3_output_key_prefix=(
+                    sample.s3_output_key_prefix
+                )
             )
             for sample in self
         ]
