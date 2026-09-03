@@ -20,8 +20,6 @@ variables:
   DS_ENFORCE_NEW_ANALYZER: 'true'
   GITLAB_ADVANCED_SAST_ENABLED: 'true'
   FF_NETWORK_PER_BUILD: "true"
-  # Reached over that network rather than through link-injected variables.
-  DOCKER_HOST: tcp://docker:2375
 
 sast:
   stage: test
