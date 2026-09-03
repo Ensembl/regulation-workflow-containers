@@ -37,6 +37,11 @@ secret_detection:
 .test:
   image: docker:28.4
   stage: test
+  # Only runners provisioned for docker-in-docker (privileged = true). The
+  # "*-docker" runners are set up for socket binding instead and cannot start
+  # dind: it dies during setup with "mount: permission denied (are you root?)".
+  tags:
+    - dind
   before_script:
     - docker --version
     - docker-compose --version
@@ -59,6 +64,11 @@ secret_detection:
 .build:
   image: docker:28.4
   stage: build
+  # Only runners provisioned for docker-in-docker (privileged = true). The
+  # "*-docker" runners are set up for socket binding instead and cannot start
+  # dind: it dies during setup with "mount: permission denied (are you root?)".
+  tags:
+    - dind
   variables:
     CR_NAME: ${CI_REGISTRY_IMAGE}/${CONTAINER_IMAGE_NAME}
     # TODO: Consider splitting this into two jobs, one for building and one for pushing
