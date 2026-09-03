@@ -28,11 +28,6 @@ class MultiomeTask(BaseModel):
         description="S3 path to fragments_merged.sort.bed.gz.",
     )
 
-    fragment_index_input_s3_key: str = Field(
-        ...,
-        description="S3 path to the .tbi index for the fragments file.",
-    )
-
     peaks_input_s3_key: str = Field(
         ...,
         description="S3 path to narrowPeak file.",
@@ -58,7 +53,6 @@ class MultiomeTask(BaseModel):
             "total_read_files_size": str(self.total_read_files_size),
             "rna_input_dir_s3_key": self.rna_input_dir_s3_key,
             "fragments_input_s3_key": self.fragments_input_s3_key,
-            "fragment_index_input_s3_key": self.fragment_index_input_s3_key,
             "peaks_input_s3_key": self.peaks_input_s3_key,
             "gex_inclusion_s3_key": self.gex_inclusion_s3_key,
             "atac_inclusion_s3_key": self.atac_inclusion_s3_key,
@@ -70,7 +64,6 @@ class MultiomeSample(BaseModel):
     total_read_files_size: ByteSize
     rna_input_dir_s3_key: str
     fragments_input_s3_key: str
-    fragment_index_input_s3_key: str
     peaks_input_s3_key: str
     gex_inclusion_s3_key: str
     atac_inclusion_s3_key: str
@@ -170,9 +163,6 @@ class MultiomeSampleSheet(
                 ),
                 fragments_input_s3_key=(
                     sample.fragments_input_s3_key
-                ),
-                fragment_index_input_s3_key=(
-                    sample.fragment_index_input_s3_key
                 ),
                 peaks_input_s3_key=(
                     sample.peaks_input_s3_key
