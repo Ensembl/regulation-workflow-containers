@@ -1,13 +1,17 @@
 ARG BEDGRAPHTOBIGWIG_VERSION="2.10.0"
+ARG UCSC_KENT_VERSION="v479"
+ARG BEDGRAPHTOBIGWIG_SHA256="22baf42aa4f01fa66a74a4d77afc6bbf5bc8354978aa2b7251a18ef9a1cc3c89"
 
 FROM bitnami/minideb:bookworm
 
 ARG BEDGRAPHTOBIGWIG_VERSION
+ARG UCSC_KENT_VERSION
+ARG BEDGRAPHTOBIGWIG_SHA256
 
 LABEL software="bedGraphToBigWig" \
       software.version="${BEDGRAPHTOBIGWIG_VERSION}" \
       about.summary="Convert a bedGraph file to bigWig format." \
-      about.home="http://hgdownload.cse.ucsc.edu/admin/exe/" \
+      about.home="https://hgdownload.soe.ucsc.edu/admin/exe/" \
       about.documentation="https://genome.ucsc.edu/goldenPath/help/bigWig.html" \
       about.license="https://github.com/ucscGenomeBrowser/kent/blob/master/LICENSE" \
       maintainer="David Urbina-Gómez" \
@@ -16,6 +20,7 @@ LABEL software="bedGraphToBigWig" \
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
       wget \
+      coreutils \
       libkrb5-3 \
       libcurl4 \
       ca-certificates \
@@ -23,8 +28,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Download precompiled UCSC binary
-RUN wget --no-check-certificate -O /usr/local/bin/bedGraphToBigWig \
-      https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64.v479/bedGraphToBigWig \
+RUN wget -O /usr/local/bin/bedGraphToBigWig \
+      "https://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64.${UCSC_KENT_VERSION}/bedGraphToBigWig" \
+    && echo "${BEDGRAPHTOBIGWIG_SHA256}  /usr/local/bin/bedGraphToBigWig" | sha256sum -c - \
     && chmod +x /usr/local/bin/bedGraphToBigWig
 
 # Create non-root user consistent with bedToBigBed and Samtools containers
