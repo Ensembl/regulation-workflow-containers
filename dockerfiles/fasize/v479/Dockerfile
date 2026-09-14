@@ -1,13 +1,16 @@
-ARG FASIZE_VERSION="v459"
+ARG FASIZE_VERSION="v479"
+ARG FASIZE_SHA256="d9072e9c630d82739571b81f47790058e4e5e7809166cd84ee2a30d6369ddb60"
+ARG FASIZE_PLATFORM="linux/amd64"
 
-FROM bitnami/minideb:bookworm
+FROM --platform=${FASIZE_PLATFORM} bitnami/minideb:bookworm
 
 ARG FASIZE_VERSION
+ARG FASIZE_SHA256
 
 LABEL software="faSize" \
       software.version="${FASIZE_VERSION}" \
       about.summary="Print total base count in fa files." \
-      about.home="http://hgdownload.cse.ucsc.edu/admin/exe/" \
+      about.home="https://hgdownload.soe.ucsc.edu/admin/exe/" \
       about.documentation="https://genome.ucsc.edu/goldenPath/help/" \
       about.license="https://github.com/ucscGenomeBrowser/kent/blob/master/LICENSE" \
       maintainer="David Urbina-Gómez" \
@@ -16,16 +19,18 @@ LABEL software="faSize" \
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
       wget \
+      coreutils \
       libkrb5-3 \
       libcurl4 \
       ca-certificates \
       bash \
     && rm -rf /var/lib/apt/lists/*
 
-# Download UCSC binary as root
-RUN wget --no-check-certificate -O /usr/local/bin/faSize \
-      https://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/faSize \
-    && chmod +x /usr/local/bin/faSize
+# Download and verify the versioned UCSC binary before making it executable
+RUN wget -O /usr/local/bin/faSize \
+      "https://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64.${FASIZE_VERSION}/faSize" \
+    && echo "${FASIZE_SHA256}  /usr/local/bin/faSize" | sha256sum -c - \
+    && chmod 0755 /usr/local/bin/faSize
 
 ARG USER_NAME="ensreg"
 ARG GROUP_NAME="ensreg"

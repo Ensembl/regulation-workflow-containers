@@ -1,0 +1,5 @@
+services:
+  sut:
+    platform: linux/amd64
+    build: .
+    entrypoint: ["/usr/local/bin/run_tests.sh"]

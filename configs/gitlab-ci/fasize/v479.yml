@@ -1,7 +1,7 @@
-.fasize-v459:
+.fasize-v479:
   variables:
     IMAGE_NAME: fasize
-    IMAGE_VERSION: v459
+    IMAGE_VERSION: v479
     DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
   # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
   rules:
@@ -9,39 +9,38 @@
     # published since the last build are picked up.
     - if: $CI_PIPELINE_SOURCE == "schedule"
     - changes:
-        - configs/gitlab-ci/fasize/v459.yml
-        - dockerfiles/fasize/v459/*
+        - configs/gitlab-ci/fasize/v479.yml
+        - dockerfiles/fasize/v479/*
         - .gitlab-ci.yml
 
-test-fasize-v459:
+test-fasize-v479:
   extends:
     - .test
-    - .fasize-v459
-  needs: [ "build-fasize-v459" ]
+    - .fasize-v479
+  needs: [ "build-fasize-v479" ]
 
-build-fasize-v459:
+build-fasize-v479:
   extends:
     - .build
-    - .fasize-v459
+    - .fasize-v479
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  
 
 
-scan-fasize-v459:
+scan-fasize-v479:
   extends:
     - .container_scanning
-    - .fasize-v459
+    - .fasize-v479
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "test-fasize-v459" ]
+  needs: [ "test-fasize-v479" ]
 
 scan-fasize-latest:
   extends:
     - .container_scanning
-    - .fasize-v459
+    - .fasize-v479
   variables:
     CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
     CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
-  needs: [ "test-fasize-v459" ]
+  needs: [ "test-fasize-v479" ]
