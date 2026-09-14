@@ -3,6 +3,7 @@
     IMAGE_NAME: ensreg-wf
     IMAGE_VERSION: 0.4.5
     DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+    DOCKER_BUILD_ARGS: "--build-arg SOFTWARE_VERSION=${IMAGE_VERSION} --build-arg PYTHON_VERSION=3.13"
   # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
   rules:
     - changes:
@@ -22,7 +23,6 @@ build-ensreg-wf-0.4.5:
     - .ensreg-wf-0.4.5
   variables:
     CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
-  
 
 
 scan-ensreg-wf-0.4.5:

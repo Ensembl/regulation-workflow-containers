@@ -1,7 +1,12 @@
 # Standalone Python build with multistage images.
 
+ARG PYTHON_VERSION
+ARG SOFTWARE_VERSION
+
 # First, build the application in the `/app` directory
-FROM ghcr.io/astral-sh/uv:0.10-python3.12-trixie-slim AS builder
+FROM ghcr.io/astral-sh/uv:0.10-python${PYTHON_VERSION}-trixie-slim AS builder
+ARG PYTHON_VERSION
+ARG SOFTWARE_VERSION
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
 
 # Configure the Python directory so it is consistent
@@ -10,13 +15,15 @@ ENV UV_PYTHON_INSTALL_DIR=/python
 # Only use the managed Python version
 ENV UV_PYTHON_PREFERENCE=only-managed
 
-## The container FROM is standardised to python 3.12 anyway, so no need for this?
-#COPY .python-version ./
-
 # Install Python before the project for caching
-RUN uv python install 3.12
+RUN test -n "${PYTHON_VERSION}" \
+    && uv python install "${PYTHON_VERSION}"
 
 WORKDIR /app
+# Ensure the image label and installed package use the same version.
+RUN --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    test "$(sed -nE 's/^version = "([^"]+)"$/\1/p' pyproject.toml)" = "${SOFTWARE_VERSION}"
+
 # Before the frozen sync
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
@@ -35,8 +42,12 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # Then, use a final image without uv
 FROM debian:trixie
 
+ARG SOFTWARE_VERSION
+
+RUN test -n "${SOFTWARE_VERSION}"
+
 LABEL software="ensreg-wf"
-LABEL software.version="0.4.5"
+LABEL software.version="${SOFTWARE_VERSION}"
 
 ARG USER_NAME="ensreg"
 ARG GROUP_NAME="ensreg"
