@@ -5,7 +5,9 @@ workflows. Every image is built, tested and scanned by CI, then pushed to the EB
 Registry.
 
 Each image lives in its own versioned directory and is pinned to an exact tool version, so a
-workflow can always pull the same image it was validated against.
+workflow can always pull the same image it was validated against. The *base* image is deliberately
+not pinned that way — it tracks a maintained minor tag so that rebuilds pick up distribution
+security updates. See [Keeping images patched](#keeping-images-patched).
 
 ## Registry
 
@@ -40,6 +42,7 @@ dockerfiles/.deprecated/           retired images, not built by CI
 configs/gitlab-ci/<image>/<version>.yml   build/test/scan jobs for that image version
 configs/gitlab-ci/container-scanning/     shared .container_scanning template
 .gitlab-ci.yml                     stages and the .build / .test job templates
+vulnerability-allowlist.yml        scanner findings that cannot be fixed by rebuilding
 ```
 
 ## Images
@@ -52,32 +55,34 @@ Versions link to their Dockerfile. The CI configuration for each is at
 | Image | Versions | Base | Summary |
 |-------|----------|------|---------|
 | [bedgraphtobigwig](./dockerfiles/bedgraphtobigwig/) | [2.10.0](./dockerfiles/bedgraphtobigwig/2.10.0/Dockerfile) | minideb bookworm | Convert bedGraph to bigWig |
-| [bedsort](./dockerfiles/bedsort/) | [v369](./dockerfiles/bedsort/v369/Dockerfile) | minideb bullseye | Sort a BED file by chrom, chromStart |
-| [bedtobigbed](./dockerfiles/bedtobigbed/) | [2.10.0](./dockerfiles/bedtobigbed/2.10.0/Dockerfile) | minideb bullseye | Convert BED to bigBed |
+| [bedsort](./dockerfiles/bedsort/) | [v369](./dockerfiles/bedsort/v369/Dockerfile) | minideb bookworm | Sort a BED file by chrom, chromStart |
+| [bedtobigbed](./dockerfiles/bedtobigbed/) | [2.10.0](./dockerfiles/bedtobigbed/2.10.0/Dockerfile) | minideb bookworm | Convert BED to bigBed |
 | [bedtools](./dockerfiles/bedtools/) | [2.31.0](./dockerfiles/bedtools/2.31.0/Dockerfile) † | ubuntu:22.04 | Genome arithmetic |
-| [bowtie2_samtools](./dockerfiles/bowtie2_samtools/) | [2.4.5_1.15.1](./dockerfiles/bowtie2_samtools/2.4.5_1.15.1/Dockerfile) <br/> [2.4.5_1.22.1](./dockerfiles/bowtie2_samtools/2.4.5_1.22.1/Dockerfile) <br/> [2.5.4_1.22.1](./dockerfiles/bowtie2_samtools/2.5.4_1.22.1/Dockerfile) | minideb bullseye | Read alignment plus SAM/BAM handling in one image |
-| [fasize](./dockerfiles/fasize/) | [v459](./dockerfiles/fasize/v459/Dockerfile) | minideb bullseye | Print total base count in FASTA files |
-| [fastp](./dockerfiles/fastp/) | [0.23.2](./dockerfiles/fastp/0.23.2/Dockerfile) | ubuntu:20.04 | All-in-one FASTQ preprocessor |
-| [fastqc](./dockerfiles/fastqc/) | [0.11.9](./dockerfiles/fastqc/0.11.9/Dockerfile) | alpine:3.12 | QC for high-throughput sequence data |
+| [bowtie2_samtools](./dockerfiles/bowtie2_samtools/) | [2.4.5_1.15.1](./dockerfiles/bowtie2_samtools/2.4.5_1.15.1/Dockerfile) <br/> [2.4.5_1.22.1](./dockerfiles/bowtie2_samtools/2.4.5_1.22.1/Dockerfile) <br/> [2.5.4_1.22.1](./dockerfiles/bowtie2_samtools/2.5.4_1.22.1/Dockerfile) | minideb bookworm | Read alignment plus SAM/BAM handling in one image |
+| [fasize](./dockerfiles/fasize/) | [v479](./dockerfiles/fasize/v479/Dockerfile) | minideb bookworm | Print total base count in FASTA files |
+| [fastp](./dockerfiles/fastp/) | [0.23.2](./dockerfiles/fastp/0.23.2/Dockerfile) | ubuntu:22.04 | All-in-one FASTQ preprocessor |
+| [fastqc](./dockerfiles/fastqc/) | [0.11.9](./dockerfiles/fastqc/0.11.9/Dockerfile) | alpine:3.22 | QC for high-throughput sequence data |
 | [genrich](./dockerfiles/genrich/) | [0.6.1](./dockerfiles/genrich/0.6.1/Dockerfile) † | minideb bookworm | Peak calling / sites of genomic enrichment |
-| [moods](./dockerfiles/moods/) | [1.9.4.1](./dockerfiles/moods/1.9.4.1/Dockerfile) | python:3.10.7 | Motif Occurrence Detection Suite |
-| [multiqc](./dockerfiles/multiqc/) | [1.19](./dockerfiles/multiqc/1.19/Dockerfile) <br/> [1.22](./dockerfiles/multiqc/1.22/Dockerfile) † | python:3.11 | Aggregate analysis results into one report |
-| [ngmerge](./dockerfiles/ngmerge/) | [0.3](./dockerfiles/ngmerge/0.3/Dockerfile) | minideb bullseye | Merge paired-end reads, remove adapters |
-| [samtools](./dockerfiles/samtools/) | [1.15.1](./dockerfiles/samtools/1.15.1/Dockerfile) <br/> [1.22.1](./dockerfiles/samtools/1.22.1/Dockerfile) | minideb bullseye | SAM/BAM/CRAM utilities |
-| [sinto_htslib](./dockerfiles/sinto_htslib/) | [0.10.1_1.22](./dockerfiles/sinto_htslib/0.10.1_1.22/Dockerfile) | minideb bullseye | Sinto single-cell tools plus HTSlib |
+| [moods](./dockerfiles/moods/) | [1.9.4.1](./dockerfiles/moods/1.9.4.1/Dockerfile) | python:3.10-slim | Motif Occurrence Detection Suite |
+| [multiqc](./dockerfiles/multiqc/) | [1.19](./dockerfiles/multiqc/1.19/Dockerfile) <br/> [1.22](./dockerfiles/multiqc/1.22/Dockerfile) † | python:3.11-slim | Aggregate analysis results into one report |
+| [ngmerge](./dockerfiles/ngmerge/) | [0.3](./dockerfiles/ngmerge/0.3/Dockerfile) | minideb bookworm | Merge paired-end reads, remove adapters |
+| [samtools](./dockerfiles/samtools/) | [1.15.1](./dockerfiles/samtools/1.15.1/Dockerfile) <br/> [1.22.1](./dockerfiles/samtools/1.22.1/Dockerfile) | minideb bookworm | SAM/BAM/CRAM utilities |
+| [sinto_htslib](./dockerfiles/sinto_htslib/) | [0.10.1_1.22](./dockerfiles/sinto_htslib/0.10.1_1.22/Dockerfile) | minideb bookworm | Sinto single-cell tools plus HTSlib |
 | [sra-toolkit](./dockerfiles/sra-toolkit/) | [3.3.0](./dockerfiles/sra-toolkit/3.3.0/Dockerfile) | debian bookworm | NCBI SRA Toolkit |
 | [star](./dockerfiles/star/) | [2.7.11b](./dockerfiles/star/2.7.11b/Dockerfile) † | minideb bookworm | RNA-seq aligner |
-| [wiggletools](./dockerfiles/wiggletools/) | [1.2.11](./dockerfiles/wiggletools/1.2.11/Dockerfile) | ubuntu:20.04 | Operations on genome-wide numerical functions |
+| [wiggletools](./dockerfiles/wiggletools/) | [1.2.11](./dockerfiles/wiggletools/1.2.11/Dockerfile) | ubuntu:22.04 | Operations on genome-wide numerical functions |
 
 ### Ensembl Regulation scripts
 
-Images that ship an in-house script rather than a third-party tool. The version is
-`<language version>_<script version>` where both matter.
+Images that ship an in-house script rather than a third-party tool. Where the language version
+matters to the script, it forms the first half of the version as `<language minor>_<script
+version>` — a minor series such as `3.11`, not a patch release, so the base can keep moving without
+renaming the image.
 
 | Image | Versions | Entry point | Summary |
 |-------|----------|-------------|---------|
-| [ensreg-gapped-peaks](./dockerfiles/ensreg-gapped-peaks/) | [3.10.12_0.1.0](./dockerfiles/ensreg-gapped-peaks/3.10.12_0.1.0/Dockerfile) | `writeGappedPeaks.py` | Gapped peaks generation |
-| [masked-regions-identification](./dockerfiles/masked-regions-identification/) | [0.1.0](./dockerfiles/masked-regions-identification/0.1.0/Dockerfile) | `maskedRegionsIdentification.R` | Masked regions identification (R 4.3.0) |
+| [ensreg-gapped-peaks](./dockerfiles/ensreg-gapped-peaks/) | [3.10_0.1.0](./dockerfiles/ensreg-gapped-peaks/3.10_0.1.0/Dockerfile) | `writeGappedPeaks.py` | Gapped peaks generation |
+| [masked-regions-identification](./dockerfiles/masked-regions-identification/) | [0.1.0](./dockerfiles/masked-regions-identification/0.1.0/Dockerfile) | `maskedRegionsIdentification.R` | Masked regions identification (R 4.3) |
 | [sn-barcode-correction](./dockerfiles/sn-barcode-correction/) | [0.2.0](./dockerfiles/sn-barcode-correction/0.2.0/Dockerfile) | `barcodes_correction.py` | Barcode correction for single-nucleus/-cell data |
 | [sn-barcode-preprocessing](./dockerfiles/sn-barcode-preprocessing/) | [0.1.1](./dockerfiles/sn-barcode-preprocessing/0.1.1/Dockerfile) | `sn_atac_barcodes_preprocessing.py` | Barcode trimming for single-nucleus/-cell data |
 | [sn-fastq-cleanup-and-update](./dockerfiles/sn-fastq-cleanup-and-update/) | [0.5.1](./dockerfiles/sn-fastq-cleanup-and-update/0.5.1/Dockerfile) | `sn_fastq_filtering_update.py` | FASTQ cleanup and whitelist filtering after barcode correction |
@@ -87,8 +92,8 @@ Images that ship an in-house script rather than a third-party tool. The version 
 | Image | Versions | Summary |
 |-------|----------|---------|
 | [aws-cli](./dockerfiles/aws-cli/) | [2.33.0](./dockerfiles/aws-cli/2.33.0/Dockerfile) | AWS CLI |
-| [bash](./dockerfiles/bash/) | [5.2-alpine3.19](./dockerfiles/bash/5.2-alpine3.19/Dockerfile) † <br/> [5.2.21](./dockerfiles/bash/5.2.21/Dockerfile) | Shell steps in workflows |
-| [python-wf-helper](./dockerfiles/python-wf-helper/) | [3.11.7_0.1.0](./dockerfiles/python-wf-helper/3.11.7_0.1.0/Dockerfile) | Python helper for workflow glue code |
+| [bash](./dockerfiles/bash/) | [5.2-alpine3.22](./dockerfiles/bash/5.2-alpine3.22/Dockerfile) † <br/> [5.2](./dockerfiles/bash/5.2/Dockerfile) | Shell steps in workflows |
+| [python-wf-helper](./dockerfiles/python-wf-helper/) | [3.11_0.1.0](./dockerfiles/python-wf-helper/3.11_0.1.0/Dockerfile) | Python helper for workflow glue code |
 | [kubectl](./dockerfiles/kubectl/) | [unversioned](./dockerfiles/kubectl/Dockerfile) | Kubernetes CLI (bitnami/kubectl 1.23) |
 | [postgres-client](./dockerfiles/postgres-client/) | [unversioned](./dockerfiles/postgres-client/Dockerfile) | `psql` and PostgreSQL 14 client tools |
 
@@ -106,26 +111,35 @@ Follow these when adding or updating an image:
 - **Non-root user.** Every image creates the `ensreg` user with UID/GID `8737` and runs as it. The
   fixed UID keeps file ownership consistent across workflow steps.
 - **Working directory.** `/home/ensreg/workdir`, mode `777`.
-- **Pinned versions.** Download a specific release; do not track a moving tag.
+- **Pin the tool, track the base.** Download an exact release of the packaged tool so the image
+  matches its version tag. The *base image* is the opposite: track a maintained minor tag
+  (`python:3.11-slim-bookworm`) rather than a patch tag, so rebuilds pick up distribution fixes —
+  see [Keeping images patched](#keeping-images-patched).
 - **Slim bases.** `bitnami/minideb`, `*-slim`, or Alpine where the tool allows it. Use a multi-stage
   build when the tool has to be compiled — see
-  [bowtie2_samtools/2.5.4_1.22.1](./dockerfiles/bowtie2_samtools/2.5.4_1.22.1/Dockerfile).
+  [bowtie2_samtools/2.5.4_1.22.1](./dockerfiles/bowtie2_samtools/2.5.4_1.22.1/Dockerfile). Keep
+  compilers and `-dev` packages out of the runtime stage; see [Keeping images
+  patched](#keeping-images-patched).
+- **Pinned Python dependencies.** Pin the transitive packages that matter, not just the top-level
+  one. `pandas==1.5.2` with an unpinned `numpy` built fine in 2023 and breaks on a rebuild today.
 - **`run_tests.sh`.** Copied to `/usr/local/bin/` and made executable. A smoke test is enough
   (`bedtools --version`, `STAR --help`), with `set -uef` and `set -o xtrace` so failures surface in
-  the CI log.
+  the CI log. Do not use `set -o pipefail` under `#!/bin/sh`: that works on Alpine's busybox ash but
+  Debian's dash rejects it and the script exits 2 before running anything. Use `#!/bin/bash`, or
+  leave `pipefail` out.
 
 ## Building and testing locally
 
 Build:
 
 ```bash
-docker build dockerfiles/bedtools/2.31.0
+docker build dockerfiles/multiqc/1.22
 ```
 
 Run the smoke test the same way CI does:
 
 ```bash
-docker compose --file dockerfiles/bedtools/2.31.0/docker-compose.test.yml up --build --exit-code-from sut
+docker compose --file dockerfiles/multiqc/1.22/docker-compose.test.yml up --build --exit-code-from sut
 ```
 
 The compose file defines a single `sut` service that builds the Dockerfile and runs `run_tests.sh`:
@@ -143,20 +157,85 @@ falls back to a plain `docker build` when it is missing, so an image with a `doc
 
 ## CI/CD pipeline
 
-`.gitlab-ci.yml` defines three stages and the job templates; `configs/gitlab-ci/**.yml` is included
-wholesale, so a per-version file is picked up as soon as it is added.
+`.gitlab-ci.yml` defines the stages and the job templates; `configs/gitlab-ci/**.yml` is included
+wholesale, so a per-version file is picked up as soon as it is added. It also pulls in GitLab's
+SAST, dependency-scanning and secret-detection templates, which scan this repository itself rather
+than the images.
 
 | Stage | Template | What it does |
 |-------|----------|--------------|
 | `build` | `.build` | Builds the image, reads `software.version` from the label, pushes the version, version-digest and (conditionally) `latest` tags |
 | `test` | `.test` | Runs `docker compose ... --exit-code-from sut` if `docker-compose.test.yml` exists, otherwise just rebuilds |
+| `test` | `sast` | GitLab Advanced SAST over the repository (scripts and CI config), not the images |
+| `secret-detection` | `secret_detection` | Scans the repository for committed credentials |
 | `security-checks` | `.container_scanning` | GitLab container scanning against the pushed version and `latest` tags; allowed to fail |
 
-Jobs run in a `docker:28.4-dind` service and retry up to twice. Each version's jobs only run when
-that version's own files change — its `configs/gitlab-ci/<image>/<version>.yml`, its
-`dockerfiles/<image>/<version>/*`, or `.gitlab-ci.yml`. Editing one image does not rebuild the rest.
+Jobs run in a `docker:28.4-dind` service and retry up to twice. Each version's jobs run when that
+version's own files change — its `configs/gitlab-ci/<image>/<version>.yml`, its
+`dockerfiles/<image>/<version>/*`, or `.gitlab-ci.yml` — or when the pipeline is a scheduled one.
+Editing one image does not rebuild the rest.
 
 Scanning can be turned off for a pipeline by setting `CONTAINER_SCANNING_DISABLED` to `true`.
+
+## Keeping images patched
+
+Container scanning runs against every published version tag and `latest`. Most
+findings are operating-system packages inherited from the base image, so four
+rules keep the count down:
+
+1. **Ship only what runs.** Compilers and `-dev` packages pull in `libc6-dev`
+   and `linux-libc-dev`, and a full language base image pulls in far more than a
+   slim one. Build in a first stage and copy the result into a slim runtime
+   stage, as in [moods](./dockerfiles/moods/1.9.4.1/Dockerfile) and
+   [ensreg-gapped-peaks](./dockerfiles/ensreg-gapped-peaks/3.10_0.1.0/Dockerfile).
+2. **Track a minor tag, not a patch tag.** CI builds from a freshly pulled base,
+   so what matters is how recently that base was rebuilt. A tag pinned to a patch
+   release is rebuilt only while that patch is current, then frozen for good when
+   the next one supersedes it: `python:3.11.7-slim-bookworm` was last pushed in
+   February 2024, days before 3.11.8 replaced it. `python:3.11-slim-bookworm` was
+   pushed yesterday. Both give Debian 12 and Python 3.11; only one is current.
+
+   Do not assume from the tag's shape — check it:
+
+   ```bash
+   docker run --rm <base> sh -c 'apt-get update -qq && apt-get -s upgrade | grep -c ^Inst'
+   ```
+
+   `python:3.10-slim-bookworm` and `python:3.11-slim-bookworm` report 0, as do
+   `bitnami/minideb:bookworm`, `debian:bookworm-slim` and `ubuntu:22.04`.
+
+3. **Upgrade at build time only where no current tag exists.** Some upstreams do
+   not publish a maintained minor tag. `rocker/r-ver:4.3` was last pushed in
+   February 2025 and still has 100 upgradable packages, because the R 4.3 series
+   ended at 4.3.3; `alpine:3.22` is rebuilt only on Alpine point releases. Those
+   images carry an `apt-get upgrade` / `apk upgrade` layer instead — currently
+   [masked-regions-identification](./dockerfiles/masked-regions-identification/0.1.0/Dockerfile),
+   [fastqc](./dockerfiles/fastqc/0.11.9/Dockerfile) and the two
+   [bash](./dockerfiles/bash/) images. Everywhere else it only adds a layer and
+   makes builds less reproducible.
+
+4. **Rebuild on a schedule.** None of the above helps until the image is rebuilt:
+   a minor tag is only re-resolved on a build, and an upgrade layer only re-runs
+   on a build. Each version's jobs also run when
+   `$CI_PIPELINE_SOURCE == "schedule"`, so a scheduled pipeline rebuilds and
+   rescans everything. Configure the schedule in
+   GitLab under **Build > Pipeline schedules**; without one, images are only
+   rebuilt when their files change.
+
+Base images must be on a release that still gets security updates. Debian 11
+(bullseye) and Ubuntu 20.04 are both past end of life; use Debian 12 (bookworm),
+Ubuntu 22.04, or a current Alpine.
+
+### Allowlisting
+
+Some findings cannot be fixed by rebuilding — the distribution has declared the
+package not affected, or the scanner attributed the CVE to the wrong package.
+Those go in [vulnerability-allowlist.yml](./vulnerability-allowlist.yml) with the
+reason recorded.
+
+Anything with an available fix must be fixed, not allowlisted. Findings that are
+real but not yet fixed upstream are also left in place, so that the fix is
+noticed when it ships.
 
 ## Adding an image or a new version
 
