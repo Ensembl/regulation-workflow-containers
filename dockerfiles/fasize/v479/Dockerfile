@@ -12,9 +12,7 @@ LABEL software="faSize" \
       about.summary="Print total base count in fa files." \
       about.home="https://hgdownload.soe.ucsc.edu/admin/exe/" \
       about.documentation="https://genome.ucsc.edu/goldenPath/help/" \
-      about.license="https://github.com/ucscGenomeBrowser/kent/blob/master/LICENSE" \
-      maintainer="David Urbina-Gómez" \
-      maintainer.email="durbina@ebi.ac.uk"
+      about.license="https://github.com/ucscGenomeBrowser/kent/blob/master/LICENSE"
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \

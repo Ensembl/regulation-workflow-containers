@@ -36,9 +36,7 @@ LABEL software="WiggleTools" \
       about.summary="Basic operations on the space of numerical functions defined on the genome using lazy evaluators for flexibility and efficiency." \
       about.home="https://github.com/Ensembl/WiggleTools" \
       about.documentation="https://github.com/Ensembl/WiggleTools/blob/master/README.md" \
-      about.license="Apache-2.0" \
-      maintainer="David Urbina-Gómez" \
-      maintainer.email="durbina@ebi.ac.uk"
+      about.license="Apache-2.0"
 
 RUN  apt-get update  \
     && apt-get install -y --no-install-recommends \

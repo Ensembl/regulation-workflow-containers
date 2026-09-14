@@ -8,9 +8,6 @@ LABEL about.home="https://tiswww.case.edu/php/chet/bash/bashtop.html"
 LABEL about.documentation="https://tiswww.case.edu/php/chet/bash/README"
 LABEL about.license="https://www.gnu.org/licenses/gpl-3.0.html"
 
-LABEL maintainer="David Urbina-Gómez"
-LABEL maintainer.email="durbina@ebi.ac.uk"
-
 # Alpine base images are rebuilt only on point releases, so pick up updates here
 RUN apk -U upgrade --no-cache
 

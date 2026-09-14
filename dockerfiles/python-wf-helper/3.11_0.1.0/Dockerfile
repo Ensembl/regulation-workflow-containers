@@ -8,9 +8,6 @@ LABEL software.version="${PYTHON_WF_HELPER_VERSION}"
 LABEL about.summary="Python Ensembl Regulation workflows helper."
 LABEL about.license="https://docs.python.org/3/license.html#psf-license"
 
-LABEL maintainer="David Urbina-Gómez"
-LABEL maintainer.email="durbina@ebi.ac.uk"
-
 ARG USER_NAME="ensreg"
 ARG GROUP_NAME="ensreg"
 

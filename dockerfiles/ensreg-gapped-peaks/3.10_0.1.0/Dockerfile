@@ -27,9 +27,6 @@ LABEL software="Ensreg Gapped Peaks generation"
 LABEL software.version="${PYTHON_WF_HELPER_VERSION}"
 LABEL about.summary="Ensembl Regulation Gapped Peaks generation - ad hoc script."
 
-LABEL maintainer="David Urbina-Gómez"
-LABEL maintainer.email="durbina@ebi.ac.uk"
-
 ARG USER_NAME="ensreg"
 ARG GROUP_NAME="ensreg"
 

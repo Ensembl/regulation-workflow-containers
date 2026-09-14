@@ -26,9 +26,7 @@ LABEL software="NGmerge" \
       about.summary="Merging paired-end reads and removing adapters" \
       about.home="https://github.com/jsh58/NGmerge" \
       about.documentation="https://github.com/jsh58/NGmerge/blob/master/README.md" \
-      about.license="https://github.com/jsh58/NGmerge/tree/master?tab=MIT-1-ov-file" \
-      maintainer="David Urbina-Gómez" \
-      maintainer.email="durbina@ebi.ac.uk"
+      about.license="https://github.com/jsh58/NGmerge/tree/master?tab=MIT-1-ov-file"
 
 # Runtime dependencies
 RUN install_packages libgomp1

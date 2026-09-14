@@ -43,9 +43,7 @@ LABEL software="Samtools" \
       about.summary="Samtools: Suite of programs for interacting with high-throughput sequencing data." \
       about.home="https://github.com/samtools/samtools" \
       about.documentation="http://www.htslib.org/doc/samtools.html" \
-      about.license="MIT" \
-      maintainer="David Urbina-Gómez" \
-      maintainer.email="durbina@ebi.ac.uk"
+      about.license="MIT"
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \

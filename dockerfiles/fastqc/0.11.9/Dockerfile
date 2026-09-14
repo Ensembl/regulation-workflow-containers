@@ -25,8 +25,7 @@ LABEL software="FastQC" \
       about.summary="A quality control tool for high throughput sequence data." \
       about.home="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/" \
       about.documentation="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/" \
-      license="https://www.gnu.org/licenses/gpl-3.0.html" \
-      maintainer="David Urbina-Gómez <durbina@ebi.ac.uk>"
+      license="https://www.gnu.org/licenses/gpl-3.0.html"
 
 # Promote ARG into ENV so it persists in containers
 ENV DESTINATION="/opt" \

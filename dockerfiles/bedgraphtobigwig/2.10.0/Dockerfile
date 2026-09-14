@@ -13,9 +13,7 @@ LABEL software="bedGraphToBigWig" \
       about.summary="Convert a bedGraph file to bigWig format." \
       about.home="https://hgdownload.soe.ucsc.edu/admin/exe/" \
       about.documentation="https://genome.ucsc.edu/goldenPath/help/bigWig.html" \
-      about.license="https://github.com/ucscGenomeBrowser/kent/blob/master/LICENSE" \
-      maintainer="David Urbina-Gómez" \
-      maintainer.email="durbina@ebi.ac.uk"
+      about.license="https://github.com/ucscGenomeBrowser/kent/blob/master/LICENSE"
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \

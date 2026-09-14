@@ -13,9 +13,7 @@ LABEL software="bedToBigBed" \
       about.summary="Convert BED file to bigBed format." \
       about.home="https://hgdownload.soe.ucsc.edu/admin/exe/" \
       about.documentation="https://genome.ucsc.edu/goldenPath/help/bigBed.html" \
-      about.license="https://github.com/ucscGenomeBrowser/kent/blob/master/LICENSE" \
-      maintainer="David Urbina-Gómez" \
-      maintainer.email="durbina@ebi.ac.uk"
+      about.license="https://github.com/ucscGenomeBrowser/kent/blob/master/LICENSE"
 
 ARG USER_NAME="ensreg"
 ARG GROUP_NAME="ensreg"

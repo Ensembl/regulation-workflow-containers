@@ -55,9 +55,7 @@ LABEL software="Bowtie2 + Samtools" \
       about.summary="Bowtie2: An ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences.; Samtools: Suite of programs for interacting with high-throughput sequencing data." \
       about.home="https://bowtie-bio.sourceforge.net/bowtie2/index.shtml; https://github.com/samtools/samtools" \
       about.documentation="https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml; http://www.htslib.org/doc/samtools.html" \
-      about.license="Bowtie2: GPL-3.0; Samtools: MIT" \
-      maintainer="David Urbina-Gómez" \
-      maintainer.email="durbina@ebi.ac.uk"
+      about.license="Bowtie2: GPL-3.0; Samtools: MIT"
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \

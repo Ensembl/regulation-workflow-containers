@@ -6,9 +6,6 @@ LABEL software="Ensreg Masked Regions Identification"
 LABEL software.version="${MASKED_REGIONS_IDENTIFICATION_VERSION}"
 LABEL about.summary="Ensembl Regulation masked regions identification - ad hoc script."
 
-LABEL maintainer="David Urbina-Gómez"
-LABEL maintainer.email="durbina@ebi.ac.uk"
-
 # Runtime libraries are installed first so that purging the -dev packages below
 # does not autoremove them. libc6-dev comes from the rocker base and is purged
 # too: it pulls in linux-libc-dev, which accounts for every critical finding on

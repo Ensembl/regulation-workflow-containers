@@ -28,9 +28,6 @@ LABEL software="STAR"
 LABEL software.version="2.7.11b"
 LABEL software.latest_version="true"
 LABEL about.home="https://github.com/alexdobin/STAR"
-LABEL maintainer="Ensembl Regulation"
-LABEL maintainer.email="helpdesk@ebi.ac.uk"
-
 ## Copy the binary from the builder
 COPY --from=builder /STAR/source/STAR /usr/local/bin/STAR
 RUN chmod +x /usr/local/bin/STAR

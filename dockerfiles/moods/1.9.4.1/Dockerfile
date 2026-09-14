@@ -25,9 +25,7 @@ LABEL software="MOODS" \
       about.summary="Motif Occurrence Detection Suite" \
       about.home="https://github.com/jhkorhonen/MOODS" \
       about.documentation="https://github.com/jhkorhonen/MOODS/blob/master/readme.MD" \
-      about.license="GPL-3.0" \
-      maintainer="David Urbina-Gómez" \
-      maintainer.email="durbina@ebi.ac.uk"
+      about.license="GPL-3.0"
 
 # Environment variables for user and workdir
 ENV HOME="/home/${USER_NAME}"
