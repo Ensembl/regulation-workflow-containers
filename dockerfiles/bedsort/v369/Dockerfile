@@ -8,6 +8,7 @@ ARG BEDSORT_SHA256
 
 LABEL software="bedSort" \
       software.version="${BEDSORT_VERSION}" \
+      software.latest_version="true" \
       about.summary="Sort a BED file by chrom,chromStart." \
       about.home="https://hgdownload.soe.ucsc.edu/admin/exe/" \
       about.documentation="https://genome.ucsc.edu/goldenPath/help/" \

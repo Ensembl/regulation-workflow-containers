@@ -5,6 +5,7 @@ ARG BARCODE_UPDATE="0.5.1"
 
 LABEL software="Ensreg snFASTQ files cleanup and filtering after barcodes correction"
 LABEL software.version="${BARCODE_UPDATE}"
+LABEL software.latest_version="true"
 LABEL about.summary="Ensembl Regulation single-nucleus FASTQ files cleanup and filtering after barcodes correction based on whitelist matching on Python."
 
 ARG USER_NAME="ensreg"

@@ -78,6 +78,7 @@ ENV HTSLIB_VERSION="1.22"
 
 LABEL software="Sinto + HTSlib"
 LABEL software.version="${SINTO_VERSION}_${HTSLIB_VERSION}"
+LABEL software.latest_version="true"
 LABEL about.summary="Sinto: single-cell analysis tools;HTSlib: a C library for reading/writing high-throughput sequencing data"
 LABEL about.home="https://github.com/timoast/sinto;https://github.com/samtools/htslib/"
 LABEL about.documentation="https://timoast.github.io/sinto/index.html;https://www.htslib.org/doc/#manual-pages"
@@ -130,4 +131,3 @@ RUN chmod 755 /usr/local/bin/run_tests.sh
 
 # Default command
 CMD ["bash"]
-

@@ -5,6 +5,7 @@ ARG BARCODE_CORRECTION_VERSION="0.2.0"
 
 LABEL software="Ensreg single nucleus barcode correction "
 LABEL software.version="${BARCODE_CORRECTION_VERSION}"
+LABEL software.latest_version="true"
 LABEL about.summary="Ensembl Regulation barcode correction for single-nucleus/-cell data on Python."
 
 ARG USER_NAME="ensreg"

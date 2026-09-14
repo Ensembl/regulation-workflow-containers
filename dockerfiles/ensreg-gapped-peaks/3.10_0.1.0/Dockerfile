@@ -25,6 +25,7 @@ ARG PYTHON_WF_HELPER_VERSION="3.10_0.1.0"
 
 LABEL software="Ensreg Gapped Peaks generation"
 LABEL software.version="${PYTHON_WF_HELPER_VERSION}"
+LABEL software.latest_version="true"
 LABEL about.summary="Ensembl Regulation Gapped Peaks generation - ad hoc script."
 
 ARG USER_NAME="ensreg"

@@ -52,6 +52,7 @@ ARG SAMTOOLS_VERSION
 
 LABEL software="Bowtie2 + Samtools" \
       software.version="${BOWTIE2_VERSION}_${SAMTOOLS_VERSION}" \
+      software.latest_version="true" \
       about.summary="Bowtie2: An ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences.; Samtools: Suite of programs for interacting with high-throughput sequencing data." \
       about.home="https://bowtie-bio.sourceforge.net/bowtie2/index.shtml; https://github.com/samtools/samtools" \
       about.documentation="https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml; http://www.htslib.org/doc/samtools.html" \

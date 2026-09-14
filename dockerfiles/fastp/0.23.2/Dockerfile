@@ -30,6 +30,7 @@ ARG FASTP_VERSION
 
 LABEL software="fastp" \
       software.version="${FASTP_VERSION}" \
+      software.latest_version="true" \
       about.summary="An ultra-fast all-in-one FASTQ preprocessor (QC/adapters/trimming/filtering/splitting/merging...)" \
       about.home="https://github.com/OpenGene/fastp" \
       about.documentation="https://github.com/OpenGene/fastp/blob/master/README.md" \

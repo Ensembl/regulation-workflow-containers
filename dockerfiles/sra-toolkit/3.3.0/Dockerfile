@@ -8,6 +8,7 @@ ENV SRA_TOOLKIT_DOWNLOAD_URL="https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.3.0/s
 
 LABEL software="SRA Toolkit"
 LABEL software.version="${SRA_TOOLKIT_VERSION}"
+LABEL software.latest_version="true"
 LABEL about.summary="The SRA Toolkit and SDK from NCBI is a collection of tools and libraries for using data in the INSDC Sequence Read Archives"
 LABEL about.home="https://github.com/ncbi/sra-tools/"
 LABEL about.documentation="https://github.com/ncbi/sra-tools/wiki"
@@ -58,4 +59,3 @@ RUN chmod 755 /usr/local/bin/run_tests.sh
 
 # Default command
 CMD ["bash"]
-

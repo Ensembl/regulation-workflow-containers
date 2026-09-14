@@ -23,6 +23,7 @@ ARG NGMERGE_VERSION
 
 LABEL software="NGmerge" \
       software.version="${NGMERGE_VERSION}" \
+      software.latest_version="true" \
       about.summary="Merging paired-end reads and removing adapters" \
       about.home="https://github.com/jsh58/NGmerge" \
       about.documentation="https://github.com/jsh58/NGmerge/blob/master/README.md" \

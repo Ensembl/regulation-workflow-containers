@@ -33,6 +33,7 @@ ARG GROUP_NAME="ensreg"
 
 LABEL software="WiggleTools" \
       software.version="${WIGGLETOOLS_VERSION}" \
+      software.latest_version="true" \
       about.summary="Basic operations on the space of numerical functions defined on the genome using lazy evaluators for flexibility and efficiency." \
       about.home="https://github.com/Ensembl/WiggleTools" \
       about.documentation="https://github.com/Ensembl/WiggleTools/blob/master/README.md" \

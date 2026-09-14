@@ -22,6 +22,7 @@ ARG GROUP_NAME="ensreg"
 
 LABEL software="MOODS" \
       software.version="${MOODS_VERSION}" \
+      software.latest_version="true" \
       about.summary="Motif Occurrence Detection Suite" \
       about.home="https://github.com/jhkorhonen/MOODS" \
       about.documentation="https://github.com/jhkorhonen/MOODS/blob/master/readme.MD" \

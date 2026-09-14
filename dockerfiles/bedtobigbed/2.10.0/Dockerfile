@@ -10,6 +10,7 @@ ARG BEDTOBIGBED_SHA256
 
 LABEL software="bedToBigBed" \
       software.version="${BEDTOBIGBED_VERSION}" \
+      software.latest_version="true" \
       about.summary="Convert BED file to bigBed format." \
       about.home="https://hgdownload.soe.ucsc.edu/admin/exe/" \
       about.documentation="https://genome.ucsc.edu/goldenPath/help/bigBed.html" \

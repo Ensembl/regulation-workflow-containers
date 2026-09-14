@@ -40,6 +40,7 @@ ARG SAMTOOLS_VERSION
 
 LABEL software="Samtools" \
       software.version="${SAMTOOLS_VERSION}" \
+      software.latest_version="true" \
       about.summary="Samtools: Suite of programs for interacting with high-throughput sequencing data." \
       about.home="https://github.com/samtools/samtools" \
       about.documentation="http://www.htslib.org/doc/samtools.html" \

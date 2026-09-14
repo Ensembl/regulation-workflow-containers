@@ -22,6 +22,7 @@ ARG FASTQC_VERSION
 
 LABEL software="FastQC" \
       software.version="${FASTQC_VERSION}" \
+      software.latest_version="true" \
       about.summary="A quality control tool for high throughput sequence data." \
       about.home="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/" \
       about.documentation="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/" \

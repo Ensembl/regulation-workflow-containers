@@ -4,6 +4,7 @@ ARG MASKED_REGIONS_IDENTIFICATION_VERSION="0.1.0"
 
 LABEL software="Ensreg Masked Regions Identification"
 LABEL software.version="${MASKED_REGIONS_IDENTIFICATION_VERSION}"
+LABEL software.latest_version="true"
 LABEL about.summary="Ensembl Regulation masked regions identification - ad hoc script."
 
 # Runtime libraries are installed first so that purging the -dev packages below

@@ -48,7 +48,7 @@ vulnerability-allowlist.yml        scanner findings that cannot be fixed by rebu
 ## Images
 
 Versions link to their Dockerfile. The CI configuration for each is at
-`configs/gitlab-ci/<image>/<version>.yml`. A `†` marks the version currently tagged `latest`.
+`configs/gitlab-ci/<image>/<version>.yml`.
 
 ### Bioinformatics tools
 
@@ -57,19 +57,19 @@ Versions link to their Dockerfile. The CI configuration for each is at
 | [bedgraphtobigwig](./dockerfiles/bedgraphtobigwig/) | [2.10.0](./dockerfiles/bedgraphtobigwig/2.10.0/Dockerfile) | minideb bookworm | Convert bedGraph to bigWig |
 | [bedsort](./dockerfiles/bedsort/) | [v369](./dockerfiles/bedsort/v369/Dockerfile) | minideb bookworm | Sort a BED file by chrom, chromStart |
 | [bedtobigbed](./dockerfiles/bedtobigbed/) | [2.10.0](./dockerfiles/bedtobigbed/2.10.0/Dockerfile) | minideb bookworm | Convert BED to bigBed |
-| [bedtools](./dockerfiles/bedtools/) | [2.31.0](./dockerfiles/bedtools/2.31.0/Dockerfile) † | ubuntu:22.04 | Genome arithmetic |
+| [bedtools](./dockerfiles/bedtools/) | [2.31.0](./dockerfiles/bedtools/2.31.0/Dockerfile) | ubuntu:22.04 | Genome arithmetic |
 | [bowtie2_samtools](./dockerfiles/bowtie2_samtools/) | [2.4.5_1.15.1](./dockerfiles/bowtie2_samtools/2.4.5_1.15.1/Dockerfile) <br/> [2.4.5_1.22.1](./dockerfiles/bowtie2_samtools/2.4.5_1.22.1/Dockerfile) <br/> [2.5.4_1.22.1](./dockerfiles/bowtie2_samtools/2.5.4_1.22.1/Dockerfile) | minideb bookworm | Read alignment plus SAM/BAM handling in one image |
 | [fasize](./dockerfiles/fasize/) | [v479](./dockerfiles/fasize/v479/Dockerfile) | minideb bookworm | Print total base count in FASTA files |
 | [fastp](./dockerfiles/fastp/) | [0.23.2](./dockerfiles/fastp/0.23.2/Dockerfile) | ubuntu:22.04 | All-in-one FASTQ preprocessor |
 | [fastqc](./dockerfiles/fastqc/) | [0.11.9](./dockerfiles/fastqc/0.11.9/Dockerfile) | alpine:3.22 | QC for high-throughput sequence data |
-| [genrich](./dockerfiles/genrich/) | [0.6.1](./dockerfiles/genrich/0.6.1/Dockerfile) † | minideb bookworm | Peak calling / sites of genomic enrichment |
+| [genrich](./dockerfiles/genrich/) | [0.6.1](./dockerfiles/genrich/0.6.1/Dockerfile) | minideb bookworm | Peak calling / sites of genomic enrichment |
 | [moods](./dockerfiles/moods/) | [1.9.4.1](./dockerfiles/moods/1.9.4.1/Dockerfile) | python:3.10-slim | Motif Occurrence Detection Suite |
-| [multiqc](./dockerfiles/multiqc/) | [1.19](./dockerfiles/multiqc/1.19/Dockerfile) <br/> [1.22](./dockerfiles/multiqc/1.22/Dockerfile) † | python:3.11-slim | Aggregate analysis results into one report |
+| [multiqc](./dockerfiles/multiqc/) | [1.19](./dockerfiles/multiqc/1.19/Dockerfile) <br/> [1.22](./dockerfiles/multiqc/1.22/Dockerfile) | python:3.11-slim | Aggregate analysis results into one report |
 | [ngmerge](./dockerfiles/ngmerge/) | [0.3](./dockerfiles/ngmerge/0.3/Dockerfile) | minideb bookworm | Merge paired-end reads, remove adapters |
 | [samtools](./dockerfiles/samtools/) | [1.15.1](./dockerfiles/samtools/1.15.1/Dockerfile) <br/> [1.22.1](./dockerfiles/samtools/1.22.1/Dockerfile) | minideb bookworm | SAM/BAM/CRAM utilities |
 | [sinto_htslib](./dockerfiles/sinto_htslib/) | [0.10.1_1.22](./dockerfiles/sinto_htslib/0.10.1_1.22/Dockerfile) | minideb bookworm | Sinto single-cell tools plus HTSlib |
 | [sra-toolkit](./dockerfiles/sra-toolkit/) | [3.3.0](./dockerfiles/sra-toolkit/3.3.0/Dockerfile) | debian bookworm | NCBI SRA Toolkit |
-| [star](./dockerfiles/star/) | [2.7.11b](./dockerfiles/star/2.7.11b/Dockerfile) † | minideb bookworm | RNA-seq aligner |
+| [star](./dockerfiles/star/) | [2.7.11b](./dockerfiles/star/2.7.11b/Dockerfile) | minideb bookworm | RNA-seq aligner |
 | [wiggletools](./dockerfiles/wiggletools/) | [1.2.11](./dockerfiles/wiggletools/1.2.11/Dockerfile) | ubuntu:22.04 | Operations on genome-wide numerical functions |
 
 ### Ensembl Regulation scripts
@@ -92,7 +92,7 @@ renaming the image.
 | Image | Versions | Summary |
 |-------|----------|---------|
 | [aws-cli](./dockerfiles/aws-cli/) | [2.33.0](./dockerfiles/aws-cli/2.33.0/Dockerfile) | AWS CLI |
-| [bash](./dockerfiles/bash/) | [5.2-alpine3.22](./dockerfiles/bash/5.2-alpine3.22/Dockerfile) † <br/> [5.2](./dockerfiles/bash/5.2/Dockerfile) | Shell steps in workflows |
+| [bash](./dockerfiles/bash/) | [5.2-alpine3.22](./dockerfiles/bash/5.2-alpine3.22/Dockerfile) <br/> [5.2](./dockerfiles/bash/5.2/Dockerfile) | Shell steps in workflows |
 | [python-wf-helper](./dockerfiles/python-wf-helper/) | [3.11_0.1.0](./dockerfiles/python-wf-helper/3.11_0.1.0/Dockerfile) | Python helper for workflow glue code |
 | [kubectl](./dockerfiles/kubectl/) | [unversioned](./dockerfiles/kubectl/Dockerfile) | Kubernetes CLI (bitnami/kubectl 1.23) |
 | [postgres-client](./dockerfiles/postgres-client/) | [unversioned](./dockerfiles/postgres-client/Dockerfile) | `psql` and PostgreSQL 14 client tools |
@@ -105,9 +105,9 @@ CI configuration, so they are not built by the pipeline.
 Follow these when adding or updating an image:
 
 - **Labels.** `software`, `software.version`, `about.summary`, `about.home`, `about.documentation`,
-  `about.license`, `maintainer`, `maintainer.email`. Add `software.latest_version="true"` on exactly
-  one version per image — that is what makes CI push `latest`. Keep `software.version` in sync with
-  the directory name; CI reads the label.
+  and `about.license`. Add `software.latest_version="true"` to exactly one version per image — the
+  newest published version — and omit it from older versions. This is what makes CI push `latest`.
+  Keep `software.version` in sync with the directory name; CI reads both labels.
 - **Non-root user.** Every image creates the `ensreg` user with UID/GID `8737` and runs as it. The
   fixed UID keeps file ownership consistent across workflow steps.
 - **Working directory.** `/home/ensreg/workdir`, mode `777`.

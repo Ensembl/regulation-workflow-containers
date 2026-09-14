@@ -9,6 +9,7 @@ ARG FASIZE_SHA256
 
 LABEL software="faSize" \
       software.version="${FASIZE_VERSION}" \
+      software.latest_version="true" \
       about.summary="Print total base count in fa files." \
       about.home="https://hgdownload.soe.ucsc.edu/admin/exe/" \
       about.documentation="https://genome.ucsc.edu/goldenPath/help/" \

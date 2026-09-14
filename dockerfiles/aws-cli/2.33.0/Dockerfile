@@ -8,6 +8,7 @@ ARG AWS_CLI_VERSION
 
 LABEL software="AWS CLI"
 LABEL software.version="${AWS_CLI_VERSION}"
+LABEL software.latest_version="true"
 LABEL about.summary="Unified tool to manage your AWS services"
 LABEL about.home="https://aws.amazon.com/cli/"
 LABEL about.documentation="https://docs.aws.amazon.com/cli/latest/"

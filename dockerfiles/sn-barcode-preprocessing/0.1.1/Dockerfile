@@ -5,6 +5,7 @@ ARG BARCODE_PREPROCESSING_VERSION="0.1.1"
 
 LABEL software="Ensreg single nucleus barcode trimming "
 LABEL software.version="${BARCODE_PREPROCESSING_VERSION}"
+LABEL software.latest_version="true"
 LABEL about.summary="Ensembl Regulation barcode trimming for single-nucleus/-cell data on Python."
 
 ARG USER_NAME="ensreg"

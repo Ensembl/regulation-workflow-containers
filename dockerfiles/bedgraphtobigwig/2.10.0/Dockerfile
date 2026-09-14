@@ -10,6 +10,7 @@ ARG BEDGRAPHTOBIGWIG_SHA256
 
 LABEL software="bedGraphToBigWig" \
       software.version="${BEDGRAPHTOBIGWIG_VERSION}" \
+      software.latest_version="true" \
       about.summary="Convert a bedGraph file to bigWig format." \
       about.home="https://hgdownload.soe.ucsc.edu/admin/exe/" \
       about.documentation="https://genome.ucsc.edu/goldenPath/help/bigWig.html" \
