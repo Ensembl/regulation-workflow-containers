@@ -180,21 +180,18 @@ Scanning can be turned off for a pipeline by setting `CONTAINER_SCANNING_DISABLE
 
 ## Keeping images patched
 
-Container scanning runs against every published version tag and `latest`. Most
-findings are operating-system packages inherited from the base image, so four
-rules keep the count down:
+Container scanning covers every published version tag and `latest`. Most
+findings come from base-image packages, so follow four rules:
 
-1. **Ship only what runs.** Compilers and `-dev` packages pull in `libc6-dev`
-   and `linux-libc-dev`, and a full language base image pulls in far more than a
-   slim one. Build in a first stage and copy the result into a slim runtime
-   stage, as in [moods](./dockerfiles/moods/1.9.4.1/Dockerfile) and
+1. **Ship only what runs.** Use multi-stage builds to keep compilers, `-dev`
+   packages and other build dependencies out of a slim runtime image, as in
+   [moods](./dockerfiles/moods/1.9.4.1/Dockerfile) and
    [ensreg-gapped-peaks](./dockerfiles/ensreg-gapped-peaks/3.10_0.1.0/Dockerfile).
-2. **Track a minor tag, not a patch tag.** CI builds from a freshly pulled base,
-   so what matters is how recently that base was rebuilt. A tag pinned to a patch
-   release is rebuilt only while that patch is current, then frozen for good when
-   the next one supersedes it: `python:3.11.7-slim-bookworm` was last pushed in
-   February 2024, days before 3.11.8 replaced it. `python:3.11-slim-bookworm` was
-   pushed yesterday. Both give Debian 12 and Python 3.11; only one is current.
+2. **Track a minor tag, not a patch tag.** Patch tags stop receiving rebuilt base
+   images when superseded. For example, `python:3.11.7-slim-bookworm` was last
+   pushed in February 2024, while `python:3.11-slim-bookworm` continues to receive
+   updates. Both provide Debian 12 and Python 3.11, but only the minor tag stays
+   current.
 
    Do not assume from the tag's shape — check it:
 
@@ -205,23 +202,19 @@ rules keep the count down:
    `python:3.10-slim-bookworm` and `python:3.11-slim-bookworm` report 0, as do
    `bitnami/minideb:bookworm`, `debian:bookworm-slim` and `ubuntu:22.04`.
 
-3. **Upgrade at build time only where no current tag exists.** Some upstreams do
-   not publish a maintained minor tag. `rocker/r-ver:4.3` was last pushed in
-   February 2025 and still has 100 upgradable packages, because the R 4.3 series
-   ended at 4.3.3; `alpine:3.22` is rebuilt only on Alpine point releases. Those
-   images carry an `apt-get upgrade` / `apk upgrade` layer instead — currently
+3. **Upgrade at build time only when no maintained tag exists.** For example,
+   `rocker/r-ver:4.3` stopped updating when R 4.3 ended, and `alpine:3.22` is
+   rebuilt only for Alpine point releases. Those images use an `apt-get upgrade`
+   or `apk upgrade` layer—currently
    [masked-regions-identification](./dockerfiles/masked-regions-identification/0.1.0/Dockerfile),
    [fastqc](./dockerfiles/fastqc/0.11.9/Dockerfile) and the two
-   [bash](./dockerfiles/bash/) images. Everywhere else it only adds a layer and
-   makes builds less reproducible.
+   [bash](./dockerfiles/bash/) images. Avoid upgrade layers elsewhere because
+   they increase image size and reduce reproducibility.
 
-4. **Rebuild on a schedule.** None of the above helps until the image is rebuilt:
-   a minor tag is only re-resolved on a build, and an upgrade layer only re-runs
-   on a build. Each version's jobs also run when
-   `$CI_PIPELINE_SOURCE == "schedule"`, so a scheduled pipeline rebuilds and
-   rescans everything. Configure the schedule in
-   GitLab under **Build > Pipeline schedules**; without one, images are only
-   rebuilt when their files change.
+4. **Rebuild on a schedule.** Base tags and upgrade layers refresh only during a
+   build. Scheduled pipelines rebuild and rescan every version because their jobs
+   run when `$CI_PIPELINE_SOURCE == "schedule"`. Configure one under **Build >
+   Pipeline schedules**; otherwise images rebuild only when their files change.
 
 Base images must be on a release that still gets security updates. Debian 11
 (bullseye) and Ubuntu 20.04 are both past end of life; use Debian 12 (bookworm),
