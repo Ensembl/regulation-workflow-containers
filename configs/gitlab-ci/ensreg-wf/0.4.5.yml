@@ -1,0 +1,44 @@
+.ensreg-wf-0.4.5:
+  variables:
+    IMAGE_NAME: ensreg-wf
+    IMAGE_VERSION: 0.4.5
+    DOCKERFILE_DIR: dockerfiles/${IMAGE_NAME}/${IMAGE_VERSION}
+    DOCKER_BUILD_ARGS: "--build-arg SOFTWARE_VERSION=${IMAGE_VERSION} --build-arg PYTHON_VERSION=3.13"
+  # TODO: It would be good if we could use DOCKERFILE_DIR in rules:changes. It didn't work when I tested it in GitLab 15.11.6-ee
+  rules:
+    - changes:
+        - configs/gitlab-ci/ensreg-wf/0.4.5.yml
+        - dockerfiles/ensreg-wf/0.4.5/*
+        - .gitlab-ci.yml
+
+test-ensreg-wf-0.4.5:
+  extends:
+    - .test
+    - .ensreg-wf-0.4.5
+  needs: [ "build-ensreg-wf-0.4.5" ]
+
+build-ensreg-wf-0.4.5:
+  extends:
+    - .build
+    - .ensreg-wf-0.4.5
+  variables:
+    CONTAINER_IMAGE_NAME: ${IMAGE_NAME}
+
+
+scan-ensreg-wf-0.4.5:
+  extends:
+    - .container_scanning
+    - .ensreg-wf-0.4.5
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:${IMAGE_VERSION}
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "test-ensreg-wf-0.4.5" ]
+
+scan-ensreg-wf-latest:
+  extends:
+    - .container_scanning
+    - .ensreg-wf-0.4.5
+  variables:
+    CS_IMAGE: ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+    CS_DOCKERFILE_PATH: ${DOCKERFILE_DIR}/Dockerfile
+  needs: [ "test-ensreg-wf-0.4.5" ]

@@ -54,7 +54,7 @@ secret_detection:
           --build \
           --exit-code-from sut
       else
-          docker build \
+          docker build ${DOCKER_BUILD_ARGS:-} \
           ${DOCKERFILE_DIR} \
           --file ${DOCKERFILE_DIR}/Dockerfile
       fi
@@ -77,7 +77,7 @@ secret_detection:
     - docker info
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
   script:
-    - docker build --rm=true -t ${CR_NAME}:${CI_COMMIT_SHA} ${DOCKERFILE_DIR}
+    - docker build --rm=true ${DOCKER_BUILD_ARGS:-} -t ${CR_NAME}:${CI_COMMIT_SHA} ${DOCKERFILE_DIR}
     - SOFTWARE_VERSION=$(docker inspect --format '{{ index .Config.Labels "software.version"}}' ${CR_NAME}:${CI_COMMIT_SHA})
     - docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:${SOFTWARE_VERSION}
     - echo "$CI_JOB_TOKEN" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
