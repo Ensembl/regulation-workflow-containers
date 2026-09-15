@@ -1,4 +1,4 @@
-# Ensembl Regulation workflow container images
+# Ensembl Regulation workflow containers
 
 Dockerfiles and GitLab CI configuration for the container images used by the Ensembl Regulation
 workflows. Every image is built, tested and scanned by CI, then pushed to the EBI GitLab Container
