@@ -95,7 +95,7 @@ renaming the image.
 | [aws-cli](./dockerfiles/aws-cli/) | [2.33.0](./dockerfiles/aws-cli/2.33.0/Dockerfile) | AWS CLI |
 | [bash](./dockerfiles/bash/) | [5.2-alpine3.22](./dockerfiles/bash/5.2-alpine3.22/Dockerfile) <br/> [5.2](./dockerfiles/bash/5.2/Dockerfile) | Shell steps in workflows |
 | [python-wf-helper](./dockerfiles/python-wf-helper/) | [3.11_0.1.0](./dockerfiles/python-wf-helper/3.11_0.1.0/Dockerfile) | Python helper for workflow glue code |
-| [kubectl](./dockerfiles/kubectl/) | [unversioned](./dockerfiles/kubectl/Dockerfile) | Kubernetes CLI (bitnami/kubectl 1.23) |
+| [kubectl](./dockerfiles/kubectl/) | [unversioned](./dockerfiles/kubectl/Dockerfile) | Kubernetes CLI (kubectl 1.37.0) |
 | [postgres-client](./dockerfiles/postgres-client/) | [unversioned](./dockerfiles/postgres-client/Dockerfile) | `psql` and PostgreSQL 14 client tools |
 
 `kubectl` and `postgres-client` sit directly under `dockerfiles/` with no version directory and no
