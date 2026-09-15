@@ -82,6 +82,7 @@ renaming the image.
 | Image | Versions | Entry point | Summary |
 |-------|----------|-------------|---------|
 | [ensreg-gapped-peaks](./dockerfiles/ensreg-gapped-peaks/) | [3.10_0.1.0](./dockerfiles/ensreg-gapped-peaks/3.10_0.1.0/Dockerfile) | `writeGappedPeaks.py` | Gapped peaks generation |
+| [ensreg-wf](./dockerfiles/ensreg-wf/) | [0.4.5](./dockerfiles/ensreg-wf/0.4.5/Dockerfile) | `ensreg-wf` | Convert sample sheets into workflow task payloads |
 | [masked-regions-identification](./dockerfiles/masked-regions-identification/) | [0.1.0](./dockerfiles/masked-regions-identification/0.1.0/Dockerfile) | `maskedRegionsIdentification.R` | Masked regions identification (R 4.3) |
 | [sn-barcode-correction](./dockerfiles/sn-barcode-correction/) | [0.2.0](./dockerfiles/sn-barcode-correction/0.2.0/Dockerfile) | `barcodes_correction.py` | Barcode correction for single-nucleus/-cell data |
 | [sn-barcode-preprocessing](./dockerfiles/sn-barcode-preprocessing/) | [0.1.1](./dockerfiles/sn-barcode-preprocessing/0.1.1/Dockerfile) | `sn_atac_barcodes_preprocessing.py` | Barcode trimming for single-nucleus/-cell data |
