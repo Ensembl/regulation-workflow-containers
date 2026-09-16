@@ -58,6 +58,11 @@ secret_detection:
           ${DOCKERFILE_DIR} \
           --file ${DOCKERFILE_DIR}/Dockerfile
       fi
+    - test -n "${CS_IMAGE}"
+    - printf 'CS_IMAGE=%s\n' "${CS_IMAGE}" > scan-image.env
+  artifacts:
+    reports:
+      dotenv: scan-image.env
   retry:
     max: 2
 
@@ -83,7 +88,10 @@ secret_detection:
     - echo "$CI_JOB_TOKEN" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
     - docker push ${CR_NAME}:${SOFTWARE_VERSION}
 
-    - SHORT_ID=$(docker inspect --format='{{index .RepoDigests 0}}'  ${CR_NAME}:${CI_COMMIT_SHA} | awk -F'@sha256:' '{print $2}' | cut -c1-12)
+    - CS_IMAGE=$(docker inspect --format='{{index .RepoDigests 0}}' ${CR_NAME}:${CI_COMMIT_SHA})
+    - test -n "${CS_IMAGE}"
+    - printf 'CS_IMAGE=%s\n' "${CS_IMAGE}" > published-image.env
+    - SHORT_ID=$(printf '%s\n' "${CS_IMAGE}" | awk -F'@sha256:' '{print $2}' | cut -c1-12)
     - docker tag ${CR_NAME}:${CI_COMMIT_SHA} ${CR_NAME}:${SOFTWARE_VERSION}-${SHORT_ID}
     - docker push ${CR_NAME}:${SOFTWARE_VERSION}-${SHORT_ID}
 
@@ -95,6 +103,9 @@ secret_detection:
     # - docker tag ${CR_NAME}:latest ${DOCKERHUB_NAME}:${SOFTWARE_VERSION}
     # - docker push ${DOCKERHUB_NAME}:latest
     # - docker push ${DOCKERHUB_NAME}:${SOFTWARE_VERSION}
+  artifacts:
+    reports:
+      dotenv: published-image.env
   after_script:
     - docker logout ${CI_REGISTRY}
   retry:

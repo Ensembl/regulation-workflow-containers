@@ -176,7 +176,7 @@ than the images.
 | `test` | `.test` | Runs `docker compose ... --exit-code-from sut` if `docker-compose.test.yml` exists, otherwise just rebuilds |
 | `test` | `sast` | GitLab Advanced SAST over the repository (scripts and CI config), not the images |
 | `secret-detection` | `secret_detection` | Scans the repository for committed credentials |
-| `security-checks` | `.container_scanning` | GitLab container scanning against the pushed version and `latest` tags; allowed to fail |
+| `security-checks` | `.container_scanning` | GitLab container scanning against the immutable registry digest returned by the version-tag push; allowed to fail |
 
 Jobs run in a `docker:28.4-dind` service and retry up to twice. Each version's jobs run when that
 version's own files change — its `configs/gitlab-ci/<image>/<version>.yml`, its
