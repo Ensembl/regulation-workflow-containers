@@ -116,6 +116,9 @@ Follow these when adding or updating an image:
   matches its version tag. The *base image* is the opposite: track a maintained minor tag
   (`python:3.11-slim-bookworm`) rather than a patch tag, so rebuilds pick up distribution fixes —
   see [Keeping images patched](#keeping-images-patched).
+- **Verify downloaded code.** Pin every downloaded archive or executable to a committed SHA-256
+  value and check it before extraction or execution. Pin Git sources to a full 40-character commit
+  and verify `git rev-parse HEAD` before building; do not build from mutable branches or tags.
 - **Slim bases.** `bitnami/minideb`, `*-slim`, or Alpine where the tool allows it. Use a multi-stage
   build when the tool has to be compiled — see
   [bowtie2_samtools/2.5.4_1.22.1](./dockerfiles/bowtie2_samtools/2.5.4_1.22.1/Dockerfile). Keep

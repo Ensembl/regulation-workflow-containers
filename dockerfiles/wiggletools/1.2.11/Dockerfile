@@ -1,8 +1,10 @@
 ARG WIGGLETOOLS_VERSION="1.2.11"
+ARG WIGGLETOOLS_COMMIT="d166db538ba176e2a4d748ea82a9f74a4736902c"
 
 FROM ubuntu:22.04 AS builder
 
 ARG WIGGLETOOLS_VERSION
+ARG WIGGLETOOLS_COMMIT
 
 RUN apt-get update \
     && apt-get install -y  --no-install-recommends\
@@ -18,8 +20,13 @@ RUN apt-get update \
     libhts-dev \
     libgsl-dev
 
-RUN git clone --depth 1  --branch v1.2.11 https://github.com/Ensembl/WiggleTools.git
-WORKDIR WiggleTools
+RUN git init /WiggleTools \
+    && cd /WiggleTools \
+    && git remote add origin https://github.com/Ensembl/WiggleTools.git \
+    && git fetch --depth 1 origin "${WIGGLETOOLS_COMMIT}" \
+    && git checkout --detach "${WIGGLETOOLS_COMMIT}" \
+    && test "$(git rev-parse HEAD)" = "${WIGGLETOOLS_COMMIT}"
+WORKDIR /WiggleTools
 # Upstream's `make test` harness runs under python2.7, which is not available on
 # a supported Ubuntu release. The image's own run_tests.sh covers the binary.
 RUN make LIBS='-lwiggletools -lBigWig -lcurl -lz -lhts -lm -lgsl -lpthread'

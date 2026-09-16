@@ -1,17 +1,20 @@
 # Declare once, visible to all stages
 ARG FASTQC_VERSION=0.11.9
 ARG FASTQC_URL="https://www.bioinformatics.babraham.ac.uk/projects/fastqc"
+ARG FASTQC_SHA256="15510a176ef798e40325b717cac556509fb218268cfdb9a35ea6776498321369"
 
 # ----------- Builder stage -----------
 FROM alpine:3.22 AS builder
 
 ARG FASTQC_VERSION
 ARG FASTQC_URL
+ARG FASTQC_SHA256
 
 ENV ZIP_FILE="fastqc_v${FASTQC_VERSION}.zip"
 
 RUN apk add --no-cache wget unzip \
  && wget ${FASTQC_URL}/${ZIP_FILE} -O /${ZIP_FILE} \
+ && echo "${FASTQC_SHA256}  /${ZIP_FILE}" | sha256sum -c - \
  && unzip /${ZIP_FILE} -d /opt \
  && rm /${ZIP_FILE}
 

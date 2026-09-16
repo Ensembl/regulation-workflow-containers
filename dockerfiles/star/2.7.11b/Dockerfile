@@ -1,9 +1,11 @@
 ARG STAR_VERSION="2.7.11b"
+ARG STAR_COMMIT="b1edc1208d91a53bf40ebae8669f71d50b994851"
 
 # ----------- Builder stage -----------
 FROM bitnami/minideb:bookworm AS builder
 
 ARG STAR_VERSION
+ARG STAR_COMMIT
 
 RUN install_packages  \
     build-essential \
@@ -13,7 +15,12 @@ RUN install_packages  \
     ca-certificates 
 
 ## Clone STAR from GitHub, run the makefile
-RUN git clone --depth 1 --branch 2.7.11b https://github.com/alexdobin/STAR.git
+RUN git init /STAR \
+    && cd /STAR \
+    && git remote add origin https://github.com/alexdobin/STAR.git \
+    && git fetch --depth 1 origin "${STAR_COMMIT}" \
+    && git checkout --detach "${STAR_COMMIT}" \
+    && test "$(git rev-parse HEAD)" = "${STAR_COMMIT}"
 WORKDIR /STAR
 RUN cd source && make
 

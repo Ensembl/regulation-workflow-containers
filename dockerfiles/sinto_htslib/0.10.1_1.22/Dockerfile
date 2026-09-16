@@ -1,6 +1,14 @@
 ## Builder ##
 
+ARG UMI_TOOLS_COMMIT="c457eefc5e0c47368cf3652b9b6d497b78c3050a"
+ARG SINTO_COMMIT="37b7db17de64c6ddd3a8512356b966adf9ecd9a8"
+ARG HTSLIB_SHA256="6250c1df297db477516e60ac8df45ed75a652d1f25b0f37f12f5b17269eafde9"
+
 FROM bitnami/minideb:bookworm AS builder
+
+ARG UMI_TOOLS_COMMIT
+ARG SINTO_COMMIT
+ARG HTSLIB_SHA256
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Debian 12 marks the system Python as externally managed (PEP 668)
@@ -38,16 +46,18 @@ RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install --upgrade pip setuptools wheel
 
 # Install umi_tools first with --no-build-isolation to bypass broken ez_setup.py
-RUN pip3 install --no-cache-dir git+https://github.com/CGATOxford/UMI-tools.git@master
+RUN pip3 install --no-cache-dir "git+https://github.com/CGATOxford/UMI-tools.git@${UMI_TOOLS_COMMIT}"
 
 # Clone sinto repository
-RUN git clone https://github.com/timoast/sinto.git /opt/sinto
+RUN git init /opt/sinto \
+    && cd /opt/sinto \
+    && git remote add origin https://github.com/timoast/sinto.git \
+    && git fetch --depth 1 origin "${SINTO_COMMIT}" \
+    && git checkout --detach "${SINTO_COMMIT}" \
+    && test "$(git rev-parse HEAD)" = "${SINTO_COMMIT}"
 
 # Setting sinto directory
 WORKDIR /opt/sinto
-
-# hard reset to v 0.10.1 commit
-RUN git reset --hard 37b7db1
 
 # Install sinto using pip
 RUN pip3 install .
@@ -59,6 +69,7 @@ ENV HTSLIB_DOWNLOAD_URL="https://github.com/samtools/htslib/releases/download/${
 WORKDIR /tmp
 
 RUN wget -q ${HTSLIB_DOWNLOAD_URL} \
+    && echo "${HTSLIB_SHA256}  htslib-${HTSLIB_VERSION}.tar.bz2" | sha256sum -c - \
     && tar xjvf htslib-${HTSLIB_VERSION}.tar.bz2 \
     && cd htslib-${HTSLIB_VERSION}/ \
     && ./configure \

@@ -1,9 +1,11 @@
 ARG NGMERGE_VERSION="0.3"
+ARG NGMERGE_COMMIT="bf260e591114fb1045e80ec5fa2cc3e663b2e19c"
 
 # ----------- Builder stage -----------
 FROM bitnami/minideb:bookworm AS builder
 
 ARG NGMERGE_VERSION
+ARG NGMERGE_COMMIT
 
 RUN install_packages \
     gcc \
@@ -12,7 +14,12 @@ RUN install_packages \
     git \
     ca-certificates
 
-RUN git clone --depth 1 --branch v${NGMERGE_VERSION} https://github.com/jsh58/NGmerge.git /build/NGmerge
+RUN git init /build/NGmerge \
+    && cd /build/NGmerge \
+    && git remote add origin https://github.com/jsh58/NGmerge.git \
+    && git fetch --depth 1 origin "${NGMERGE_COMMIT}" \
+    && git checkout --detach "${NGMERGE_COMMIT}" \
+    && test "$(git rev-parse HEAD)" = "${NGMERGE_COMMIT}"
 WORKDIR /build/NGmerge
 RUN make
 

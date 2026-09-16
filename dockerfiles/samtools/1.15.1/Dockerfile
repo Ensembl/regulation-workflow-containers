@@ -1,9 +1,11 @@
 ARG SAMTOOLS_VERSION="1.15.1"
+ARG SAMTOOLS_SHA256="708c525ac76b0532b25f14aadea34a4d11df667bc19bf0a74dae617d80526c6e"
 
 # ----------- Builder stage -----------
 FROM bitnami/minideb:bookworm AS builder
 
 ARG SAMTOOLS_VERSION
+ARG SAMTOOLS_SHA256
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -25,6 +27,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV SAMTOOLS_DOWNLOAD_URL="https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2"
 WORKDIR /tmp
 RUN wget -q ${SAMTOOLS_DOWNLOAD_URL} \
+    && echo "${SAMTOOLS_SHA256}  samtools-${SAMTOOLS_VERSION}.tar.bz2" | sha256sum -c - \
     && tar -xjf samtools-${SAMTOOLS_VERSION}.tar.bz2 \
     && cd samtools-${SAMTOOLS_VERSION} \
     && ./configure --prefix=/usr/local \

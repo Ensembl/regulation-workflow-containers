@@ -1,4 +1,8 @@
+ARG SRA_TOOLKIT_SHA256="b84fceeeca3ccfab2eac88dc860a1a71c830e1dd95cea9cc53e2f93668e7dcc0"
+
 FROM debian:bookworm-slim
+
+ARG SRA_TOOLKIT_SHA256
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -26,6 +30,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /tmp
 
 RUN wget ${SRA_TOOLKIT_DOWNLOAD_URL} \
+    && echo "${SRA_TOOLKIT_SHA256}  sratoolkit.${SRA_TOOLKIT_VERSION}-ubuntu64.tar.gz" | sha256sum -c - \
     && tar -xzf sratoolkit.${SRA_TOOLKIT_VERSION}-ubuntu64.tar.gz \
     && mv sratoolkit.${SRA_TOOLKIT_VERSION}-ubuntu64 /opt/sratoolkit \
     && rm sratoolkit.${SRA_TOOLKIT_VERSION}-ubuntu64.tar.gz

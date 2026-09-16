@@ -1,4 +1,8 @@
-FROM bitnami/minideb:bookworm as builder
+ARG GENRICH_COMMIT="8558e927105cda237b42f1b387ab2a5144ff2c87"
+
+FROM bitnami/minideb:bookworm AS builder
+
+ARG GENRICH_COMMIT
 
 RUN install_packages  \
     gcc \
@@ -7,8 +11,13 @@ RUN install_packages  \
     git \
     ca-certificates
 
-RUN git clone --depth 1 --branch v0.6.1 https://github.com/jsh58/Genrich.git
-WORKDIR Genrich
+RUN git init /Genrich \
+    && cd /Genrich \
+    && git remote add origin https://github.com/jsh58/Genrich.git \
+    && git fetch --depth 1 origin "${GENRICH_COMMIT}" \
+    && git checkout --detach "${GENRICH_COMMIT}" \
+    && test "$(git rev-parse HEAD)" = "${GENRICH_COMMIT}"
+WORKDIR /Genrich
 RUN make
 
 FROM bitnami/minideb:bookworm

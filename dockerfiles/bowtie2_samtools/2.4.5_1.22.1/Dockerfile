@@ -1,11 +1,15 @@
 ARG BOWTIE2_VERSION="2.4.5"
 ARG SAMTOOLS_VERSION="1.22.1"
+ARG BOWTIE2_SHA256="6f90cd5f4cd66a06596f10c2c3e09cbeb798b7a409e904c2d820ccfbed2b5e39"
+ARG SAMTOOLS_SHA256="02aa5cd0ba52e06c2080054e059d7d77a885dfe9717c31cd89dfe7a4047eda0e"
 
 # ----------- Builder stage -----------
 FROM bitnami/minideb:bookworm AS builder
 
 ARG BOWTIE2_VERSION
 ARG SAMTOOLS_VERSION
+ARG BOWTIE2_SHA256
+ARG SAMTOOLS_SHA256
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -28,6 +32,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Download and prepare Bowtie2
 ENV BOWTIE2_BINARY_PREFIX=bowtie2-${BOWTIE2_VERSION}-linux-x86_64
 RUN wget -q https://github.com/BenLangmead/bowtie2/releases/download/v${BOWTIE2_VERSION}/${BOWTIE2_BINARY_PREFIX}.zip \
+    && echo "${BOWTIE2_SHA256}  ${BOWTIE2_BINARY_PREFIX}.zip" | sha256sum -c - \
     && unzip ${BOWTIE2_BINARY_PREFIX}.zip \
     && cp -r ${BOWTIE2_BINARY_PREFIX}/* /usr/local/bin/ \
     && rm -rf ${BOWTIE2_BINARY_PREFIX} ${BOWTIE2_BINARY_PREFIX}.zip
@@ -36,6 +41,7 @@ RUN wget -q https://github.com/BenLangmead/bowtie2/releases/download/v${BOWTIE2_
 ENV SAMTOOLS_DOWNLOAD_URL="https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2"
 WORKDIR /tmp
 RUN wget -q ${SAMTOOLS_DOWNLOAD_URL} \
+    && echo "${SAMTOOLS_SHA256}  samtools-${SAMTOOLS_VERSION}.tar.bz2" | sha256sum -c - \
     && tar -xjf samtools-${SAMTOOLS_VERSION}.tar.bz2 \
     && cd samtools-${SAMTOOLS_VERSION} \
     && ./configure --prefix=/usr/local \
