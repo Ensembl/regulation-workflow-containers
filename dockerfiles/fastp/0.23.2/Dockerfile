@@ -39,6 +39,7 @@ LABEL software="fastp" \
 ENV WORKDIR="/home/ensreg/workdir"
 
 RUN apt-get update && \
+    apt-get upgrade -y --no-install-recommends && \
     apt-get install -y --no-install-recommends \
       libdeflate0 \
       libisal2 \

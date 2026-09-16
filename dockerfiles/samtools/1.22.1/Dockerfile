@@ -81,5 +81,8 @@ COPY --from=builder /usr/local/bin/samtools /usr/local/bin/
 COPY run_tests.sh /usr/local/bin/
 RUN  chmod 755 /usr/local/bin/run_tests.sh
 
+USER ${USER_NAME}
+WORKDIR ${WORKDIR}
+
 # Default command
 CMD ["samtools"]

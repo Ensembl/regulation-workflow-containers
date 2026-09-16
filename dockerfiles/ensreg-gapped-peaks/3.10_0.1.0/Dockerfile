@@ -35,7 +35,9 @@ ENV HOME="/home/${USER_NAME}"
 ENV WORKDIR="${HOME}/workdir"
 
 # pybedtools shells out to bedtools, so it is a runtime dependency.
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update \
+    && apt-get upgrade -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends \
     ca-certificates \
     bedtools \
     && rm -rf /var/lib/apt/lists/*

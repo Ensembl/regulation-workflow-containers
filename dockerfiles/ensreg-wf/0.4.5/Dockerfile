@@ -46,6 +46,10 @@ ARG SOFTWARE_VERSION
 
 RUN test -n "${SOFTWARE_VERSION}"
 
+RUN apt-get update \
+    && apt-get upgrade -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
 LABEL software="ensreg-wf"
 LABEL software.version="${SOFTWARE_VERSION}"
 

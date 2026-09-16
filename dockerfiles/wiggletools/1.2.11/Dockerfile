@@ -47,11 +47,13 @@ LABEL software="WiggleTools" \
       about.license="Apache-2.0"
 
 RUN  apt-get update  \
+    && apt-get upgrade -y --no-install-recommends \
     && apt-get install -y --no-install-recommends \
     libbigwig0 \
     libhts3 \
     libgsl27 \
-    ca-certificates
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /WiggleTools/bin/wiggletools /usr/local/bin/
 

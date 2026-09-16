@@ -77,5 +77,8 @@ RUN useradd -u 8737 -m -s /bin/bash ${USER_NAME} && \
 # Copy Samtools binary from builder
 COPY --from=builder /usr/local/bin/samtools /usr/local/bin/
 
+USER ${USER_NAME}
+WORKDIR ${WORKDIR}
+
 # Default command
 CMD ["samtools"]

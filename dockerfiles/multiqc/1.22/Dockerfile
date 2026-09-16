@@ -8,6 +8,9 @@ LABEL about.home="https://multiqc.info/"
 LABEL about.documentation="https://multiqc.info/docs/"
 LABEL license="https://github.com/MultiQC/MultiQC?tab=GPL-3.0-1-ov-file"
 
+RUN apt-get update \
+    && apt-get upgrade -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /tmp/
 

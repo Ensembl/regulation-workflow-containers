@@ -32,6 +32,10 @@ LABEL software="MOODS" \
 ENV HOME="/home/${USER_NAME}"
 ENV WORKDIR="${HOME}/workdir"
 
+RUN apt-get update \
+    && apt-get upgrade -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /install /usr/local
 
 # Create non-root user and directories

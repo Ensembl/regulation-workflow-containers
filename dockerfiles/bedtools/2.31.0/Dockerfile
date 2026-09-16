@@ -13,6 +13,7 @@ LABEL about.license="https://github.com/arq5x/bedtools2?tab=MIT-1-ov-file"
 
 
 RUN apt-get update  \
+  && apt-get upgrade -y --no-install-recommends \
   && apt-get install -y --no-install-recommends  \
   wget  \
   ca-certificates \

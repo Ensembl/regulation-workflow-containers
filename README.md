@@ -116,6 +116,10 @@ Follow these when adding or updating an image:
   matches its version tag. The *base image* is the opposite: track a maintained minor tag
   (`python:3.11-slim-bookworm`) rather than a patch tag, so rebuilds pick up distribution fixes —
   see [Keeping images patched](#keeping-images-patched).
+- **Apply runtime security updates.** In Debian and Ubuntu runtime stages, run `apt-get update` and
+  `apt-get upgrade -y --no-install-recommends` in the same layer, then remove
+  `/var/lib/apt/lists/*`. Do not rely on a refreshed base tag alone: vendor base images can lag the
+  distribution security repository.
 - **Verify downloaded code.** Pin every downloaded archive or executable to a committed SHA-256
   value and check it before extraction or execution. Pin Git sources to a full 40-character commit
   and verify `git rev-parse HEAD` before building; do not build from mutable branches or tags.

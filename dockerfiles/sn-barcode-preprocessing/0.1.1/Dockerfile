@@ -16,6 +16,7 @@ ENV WORKDIR="${HOME}/workdir"
 
 # Install pigz
 RUN apt-get update && \
+    apt-get upgrade -y --no-install-recommends && \
     apt-get install -y --no-install-recommends pigz && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

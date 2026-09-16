@@ -19,13 +19,16 @@ LABEL about.documentation="https://github.com/ncbi/sra-tools/wiki"
 LABEL about.license="https://github.com/ncbi/sra-tools?tab=License-1-ov-file#readme"
 
 # Dependencies installation
-RUN apt-get update && apt-get install -y \
+RUN apt-get update \
+    && apt-get upgrade -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends \
     wget \
     ca-certificates \
     zlib1g \
     libncurses6 \
-    libstdc++6 && \
-    apt-get clean
+    libstdc++6 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /tmp
 

@@ -15,6 +15,10 @@ ARG GROUP_NAME="ensreg"
 ENV HOME="/home/${USER_NAME}"
 ENV WORKDIR="${HOME}/workdir"
 
+RUN apt-get update \
+    && apt-get upgrade -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt /tmp/
 
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
