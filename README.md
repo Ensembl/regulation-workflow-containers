@@ -252,3 +252,9 @@ noticed when it ships.
 
 To retire an image, move its directory under `dockerfiles/.deprecated/` and delete its
 `configs/gitlab-ci/` entry so the pipeline stops building it.
+
+## License
+
+Licensed under the terms of both the Apache License (Version 2.0) and MIT license.
+
+See [LICENSE-APACHE](LICENSE-APACHE), [LICENSE-MIT](LICENSE-MIT), and [COPYRIGHT](COPYRIGHT) for details.
