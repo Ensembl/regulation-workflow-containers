@@ -1,7 +1,7 @@
 FROM python:3.11-slim-bookworm
 
 
-ARG BARCODE_PREPROCESSING_VERSION="0.1.1"
+ARG BARCODE_PREPROCESSING_VERSION="0.1.2"
 
 LABEL software="Ensreg single nucleus barcode trimming "
 LABEL software.version="${BARCODE_PREPROCESSING_VERSION}"

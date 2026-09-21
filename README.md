@@ -85,7 +85,7 @@ renaming the image.
 | [ensreg-wf](./dockerfiles/ensreg-wf/) | [0.4.5](./dockerfiles/ensreg-wf/0.4.5/Dockerfile) | `ensreg-wf` | Convert sample sheets into workflow task payloads |
 | [masked-regions-identification](./dockerfiles/masked-regions-identification/) | [0.1.0](./dockerfiles/masked-regions-identification/0.1.0/Dockerfile) | `maskedRegionsIdentification.R` | Masked regions identification (R 4.3) |
 | [sn-barcode-correction](./dockerfiles/sn-barcode-correction/) | [0.2.0](./dockerfiles/sn-barcode-correction/0.2.0/Dockerfile) | `barcodes_correction.py` | Barcode correction for single-nucleus/-cell data |
-| [sn-barcode-preprocessing](./dockerfiles/sn-barcode-preprocessing/) | [0.1.1](./dockerfiles/sn-barcode-preprocessing/0.1.1/Dockerfile) | `sn_atac_barcodes_preprocessing.py` | Barcode trimming for single-nucleus/-cell data |
+| [sn-barcode-preprocessing](./dockerfiles/sn-barcode-preprocessing/) | [0.1.2](./dockerfiles/sn-barcode-preprocessing/0.1.2/Dockerfile) | `sn_atac_barcodes_preprocessing.py` | Barcode trimming for single-nucleus/-cell data |
 | [sn-fastq-cleanup-and-update](./dockerfiles/sn-fastq-cleanup-and-update/) | [0.5.1](./dockerfiles/sn-fastq-cleanup-and-update/0.5.1/Dockerfile) | `sn_fastq_filtering_update.py` | FASTQ cleanup and whitelist filtering after barcode correction |
 
 ### Helper images
